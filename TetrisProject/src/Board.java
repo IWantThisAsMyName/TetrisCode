@@ -100,7 +100,30 @@ public class Board {
 		return false;
 	}
 	
+	private int centerCnt;
+	
 	public void rotatePiece() {
+		centerCnt = 0;
+		for(Block a : moveBlocks) {
+			if(a.center()) centerCnt++;
+		}
 		
+		if(centerCnt == 0) {
+			return;
+		}
+		
+		if(centerCnt == 2) {
+			for(int i = -1; i <= 1; i+=2) {
+				for() {
+					
+				}
+				for() {
+					
+				}
+			}
+			return;
+		}
+		
+		return;
 	}
 }
