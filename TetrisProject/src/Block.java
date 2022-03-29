@@ -4,10 +4,12 @@ import java.util.ArrayList;
 public class Block {
 	private int color;
 	private Point coords;
+	private boolean rotateCenter;
 
-	public Block(int color, int x, int y) {
+	public Block(int color, int x, int y, boolean rotateCenter) {
 		coords.setLocation(x, y);
 		this.color = color;
+		this.rotateCenter = rotateCenter;
 	}
 
 
@@ -25,6 +27,10 @@ public class Block {
 
 	public void changeY(int newY) {
 		coords.setLocation(coords.getX(), newY);
+	}
+	
+	public boolean center() {
+		return rotateCenter;
 	}
 
 }
