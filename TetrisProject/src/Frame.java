@@ -24,7 +24,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	
 	public Frame() {
 		JFrame f = new JFrame("Tetris");
-		f.setSize(new Dimension(600, 400));
+		f.setSize(new Dimension(400, 800));
 		f.setBackground(Color.blue);
 		f.add(this);
 		f.setResizable(false);
