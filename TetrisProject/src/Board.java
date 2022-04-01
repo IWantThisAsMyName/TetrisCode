@@ -60,10 +60,10 @@ public class Board {
 			return;
 		}
 		// T Piece
-		moveBlocks.add(new Block(5, 5, 0, false));
-		moveBlocks.add(new Block(5, 6, 1, false));
-		moveBlocks.add(new Block(5, 6, 0, true));
-		moveBlocks.add(new Block(5, 7, 0, false));
+		moveBlocks.add(new Block(6, 5, 0, false));
+		moveBlocks.add(new Block(6, 6, 1, false));
+		moveBlocks.add(new Block(6, 6, 0, true));
+		moveBlocks.add(new Block(6, 7, 0, false));
 
 	}
 
@@ -245,5 +245,9 @@ public class Board {
 			}
 		}
 		return true;
+	}
+	
+	public static Block getPlacedBlock(int x, int y) {
+		return placedBlocks[y][x];
 	}
 }

@@ -2,6 +2,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,31 +15,52 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 public class Frame extends JPanel implements ActionListener, MouseListener, KeyListener {
+	private Block block;
+	private Image c0 = getImage();
 	public void paint(Graphics g) {
 		super.paintComponent(g);
+		for (int r = 0; r < 20; r++) {
+			for (int c = 0; c < 10; c++) {
+				block = Board.getPlacedBlock(r, c);
+				if (block.color() == 6) {
+					
+				} else if (block.color() == 5) {
+
+				} else if (block.color() == 4) {
+
+				} else if (block.color() == 3) {
+
+				} else if (block.color() == 2) {
+
+				} else if (block.color() == 1) {
+
+				} else if (block.color() == 0) {
+
+				}
+			}
+		}
 	}
-	
+
 	public static void main(String[] arg) {
 		Frame f = new Frame();
 	}
-	
+
 	public Frame() {
 		JFrame f = new JFrame("Tetris");
 		f.setSize(new Dimension(400, 800));
 		f.setBackground(Color.blue);
 		f.add(this);
 		f.setResizable(false);
-		f.setLayout(new GridLayout(1,2));
+		f.setLayout(new GridLayout(1, 2));
 		f.addMouseListener(this);
 		f.addKeyListener(this);
 		Timer t = new Timer(16, this);
 		t.start();
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setVisible(true);
-		
-		
+
 	}
-	
+
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
 
@@ -46,23 +68,23 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 
 	@Override
 	public void mouseEntered(MouseEvent arg0) {
-		
+
 	}
 
 	@Override
 	public void mouseExited(MouseEvent arg0) {
-		
+
 	}
 
 	@Override
 	public void mousePressed(MouseEvent arg0) {
-	
+
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -74,36 +96,36 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	@Override
 	public void keyPressed(KeyEvent arg0) {
 		// TODO Auto-generated method stub
-			System.out.println(arg0.getKeyCode());
-			switch(arg0.getKeyCode()) {
-			case 39: //right
-				break;
-			
-			case 37: //left
-				break;
-				
-			case 32: //instant drop, space bar
-				break;
-				
-			case 38: //rotate, up key
-				break;
-				
-			case 40: //soft drop, down key
-				break;
-			}
+		System.out.println(arg0.getKeyCode());
+		switch (arg0.getKeyCode()) {
+		case 39: // right
+			break;
+
+		case 37: // left
+			break;
+
+		case 32: // instant drop, space bar
+			break;
+
+		case 38: // rotate, up key
+			break;
+
+		case 40: // soft drop, down key
+			break;
+		}
 
 	}
 
 	@Override
 	public void keyReleased(KeyEvent arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void keyTyped(KeyEvent arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }
