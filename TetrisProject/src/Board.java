@@ -114,10 +114,10 @@ public class Board {
 		
 		if(centerCnt == 2) {
 			for(int i = -1; i <= 1; i+=2) {
-				for() {
+				while(i == 1) {
 					
 				}
-				for() {
+				while(true) {
 					
 				}
 			}
