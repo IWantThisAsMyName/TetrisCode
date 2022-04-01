@@ -36,6 +36,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setVisible(true);
 		
+		
 	}
 	
 	@Override
@@ -74,6 +75,22 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	public void keyPressed(KeyEvent arg0) {
 		// TODO Auto-generated method stub
 			System.out.println(arg0.getKeyCode());
+			switch(arg0.getKeyCode()) {
+			case 39: //right
+				break;
+			
+			case 37: //left
+				break;
+				
+			case 32: //instant drop, space bar
+				break;
+				
+			case 38: //rotate, up key
+				break;
+				
+			case 40: //soft drop, down key
+				break;
+			}
 
 	}
 
