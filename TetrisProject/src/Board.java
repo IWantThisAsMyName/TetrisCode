@@ -114,16 +114,51 @@ public class Board {
 		
 		if(centerCnt == 2) {
 			for(int i = -1; i <= 1; i+=2) {
-				for() {
-					
-				}
-				for() {
-					
+				if(i == -1) {
+					for(int x = 1; x >= -2;) {
+						
+					}
+					for(int x = -2; x <= 1; x++) {
+						
+					}
+				} else {
+					for(int x = 1; x >= -2;) {
+						
+					}
+					for(int x = -2; x <= 1; x++) {
+						
+					}
 				}
 			}
 			return;
 		}
 		
 		return;
+	}
+	
+	private static void clearLines(int[] arr) {
+		ArrayList<Integer> remove = new ArrayList<Integer>();
+		for(int i : arr) {
+			if(lineIsFull(i)) {
+				remove.add(i);
+			}
+		}
+		
+		if(remove.size() == 0) {
+			return;
+		}
+		
+		for(int r : remove) {
+			
+		}
+	}
+	
+	private static boolean lineIsFull(int index) {
+		for(int i = 0; i < 10; i++) {
+			if(placedBlocks[index][i] == null) {
+				return false;
+			}
+		}
+		return true;
 	}
 }
