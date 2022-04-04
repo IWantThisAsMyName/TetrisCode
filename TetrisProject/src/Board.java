@@ -1,13 +1,35 @@
 import java.util.ArrayList;
+import java.awt.Graphics2D;
+import java.awt.Graphics;
 
-public class Board {
+
+public class Board implements Runnable {
 	private static Block[][] placedBlocks = new Block[21][10];
 	private static ArrayList<Block> moveBlocks = new ArrayList<Block>();
 	private int rotateState;
+	
 
 	public Board() {
+		for(Block[] arr : placedBlocks) {
+			for(Block pBlock : arr) {
+				
+			}
+		}
+		try {
+			Thread.sleep(10);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
+	
+	public void run() {
+		
+	}
+	
+	
+	
 	public void newPiece() {
 		int random = (int) Math.random() * 7;
 		rotateState = 0;
