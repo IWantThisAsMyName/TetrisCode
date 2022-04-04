@@ -7,12 +7,15 @@ public class Board implements Runnable {
 	private static Block[][] placedBlocks = new Block[21][10];
 	private static ArrayList<Block> moveBlocks = new ArrayList<Block>();
 	private int rotateState;
-	
-
+	Graphics g;
 	public Board() {
+	}
+
+	
+	public void run() {
 		for(Block[] arr : placedBlocks) {
 			for(Block pBlock : arr) {
-				
+				pBlock.paint(g);
 			}
 		}
 		try {
@@ -21,11 +24,6 @@ public class Board implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
-
-	
-	public void run() {
-		
 	}
 	
 	

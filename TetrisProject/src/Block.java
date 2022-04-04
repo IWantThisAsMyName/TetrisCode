@@ -14,25 +14,30 @@ public class Block {
 	public Block(int color, int x, int y, boolean rotateCenter) {
 		coords.setLocation(x, y);
 		this.rotateCenter = rotateCenter;
-		switch(color) {
-		case 0: 
+		switch (color) {
+		case 0:
 			image = getImage("");
 			break;
 		case 1:
+			image = getImage("");
 			break;
 		case 2:
+			image = getImage("");
 			break;
 		case 3:
+			image = getImage("");
 			break;
 		case 4:
+			image = getImage("");
 			break;
 		case 5:
+			image = getImage("");
 			break;
 		case 6:
+			image = getImage("");
 			break;
 		}
 	}
-
 
 	public Point getXY() {
 		return coords;
@@ -41,20 +46,21 @@ public class Block {
 	public void changeX(int newX) {
 		coords.setLocation(newX, coords.getY());
 	}
-
+	
+	
 	public void changeY(int newY) {
 		coords.setLocation(coords.getX(), newY);
 	}
-	
+
 	public boolean center() {
 		return rotateCenter;
 	}
-	
-	
+
 	public void paint(Graphics g) {
 		Graphics2D g2D = (Graphics2D) g;
+		
 	}
-	
+
 	private Image getImage(String path) {
 		Image tempImage = null;
 		try {
