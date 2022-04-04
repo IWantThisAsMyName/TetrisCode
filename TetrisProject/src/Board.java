@@ -1,13 +1,35 @@
 import java.util.ArrayList;
+import java.awt.Graphics2D;
+import java.awt.Graphics;
 
-public class Board {
+
+public class Board implements Runnable {
 	private static Block[][] placedBlocks = new Block[21][10];
 	private static ArrayList<Block> moveBlocks = new ArrayList<Block>();
 	private int rotateState;
+	
 
 	public Board() {
+		for(Block[] arr : placedBlocks) {
+			for(Block pBlock : arr) {
+				
+			}
+		}
+		try {
+			Thread.sleep(10);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
+	
+	public void run() {
+		
+	}
+	
+	
+	
 	public void newPiece() {
 		int random = (int) Math.random() * 7;
 		rotateState = 0;
@@ -60,10 +82,10 @@ public class Board {
 			return;
 		}
 		// T Piece
-		moveBlocks.add(new Block(5, 5, 0, false));
-		moveBlocks.add(new Block(5, 6, 1, false));
-		moveBlocks.add(new Block(5, 6, 0, true));
-		moveBlocks.add(new Block(5, 7, 0, false));
+		moveBlocks.add(new Block(6, 5, 0, false));
+		moveBlocks.add(new Block(6, 6, 1, false));
+		moveBlocks.add(new Block(6, 6, 0, true));
+		moveBlocks.add(new Block(6, 7, 0, false));
 
 	}
 
@@ -125,6 +147,13 @@ public class Board {
 		}
 
 		if (centerCnt == 2) {
+			for (int i = -1; i <= 1; i += 2) {
+				while (i == 1) {
+				}
+			}
+		}
+
+		if (centerCnt == 2) {
 			if (rotateState == 0) {
 				for (Block b : moveBlocks) {
 					y = -1;
@@ -133,77 +162,81 @@ public class Board {
 					b.changeY((int) (b.getXY().getY() + y));
 					x++;
 					y++;
-				}
-				return;
-			}
-			if (rotateState == 1) {
-				for (Block b : moveBlocks) {
-					y = 2;
-					x = 1;
-					b.changeX((int) (b.getXY().getX() + x));
-					b.changeY((int) (b.getXY().getY() + y));
-					x--;
-					y--;
-				}
-				return;
-			}
-			if (rotateState == 2) {
-				for (Block b : moveBlocks) {
-					y = 1;
-					x = 2;
-					b.changeX((int) (b.getXY().getX() + x));
-					b.changeY((int) (b.getXY().getY() + y));
-					x--;
-					y--;
 
 				}
-				return;
-			}
-			if (rotateState == 3) {
-				for (Block b : moveBlocks) {
-					y = -1;
-					x = -2;
-					b.changeX((int) (b.getXY().getX() + x));
-					b.changeY((int) (b.getXY().getY() + y));
-					x++;
-					y++;
-				}
-				return;
-			}
-		}
-
-		for (Block b : moveBlocks) {
-			if (b.center()) {
-				center = b;
-			}
-		}
-
-		for (Block b : moveBlocks) {
-			if (!b.center()) {
-				x = (int) (b.getXY().getX() - center.getXY().getX());
-				y = (int) (b.getXY().getY() - center.getXY().getY());
-				mod = 1;
-				if (x != 0 && y != 0) {
-					if (y == 1) {
-						mod = -1;
+				if (rotateState == 1) {
+					for (Block b : moveBlocks) {
+						y = 2;
+						x = 1;
+						b.changeX((int) (b.getXY().getX() + x));
+						b.changeY((int) (b.getXY().getY() + y));
+						x--;
+						y--;
 					}
-					if (x == 1) {
-						b.changeY((int) (b.getXY().getY() + (2 * mod)));
+					return;
+				}
+				if (rotateState == 2) {
+					for (Block b : moveBlocks) {
+						y = 1;
+						x = 2;
+						b.changeX((int) (b.getXY().getX() + x));
+						b.changeY((int) (b.getXY().getY() + y));
+						x--;
+						y--;
+
+					}
+					return;
+				}
+				if (rotateState == 3) {
+					for (Block b : moveBlocks) {
+						y = -1;
+						x = -2;
+						b.changeX((int) (b.getXY().getX() + x));
+						b.changeY((int) (b.getXY().getY() + y));
+						x++;
+						y++;
+					}
+					return;
+				}
+			}
+
+			for (Block b : moveBlocks) {
+				if (b.center()) {
+					center = b;
+				}
+			}
+
+			for (Block b : moveBlocks) {
+				if (!b.center()) {
+					x = (int) (b.getXY().getX() - center.getXY().getX());
+					y = (int) (b.getXY().getY() - center.getXY().getY());
+					mod = 1;
+					if (x != 0 && y != 0) {
+						if (y == 1) {
+							mod = -1;
+						}
+						if (x == 1) {
+							b.changeY((int) (b.getXY().getY() + (2 * mod)));
+						} else {
+							b.changeX((int) (b.getXY().getX() + (2 * mod)));
+						}
 					} else {
-						b.changeX((int) (b.getXY().getX() + (2 * mod)));
-					}
-				} else {
-					if (x == 1) {
-						b.changeX()
-					}
-					if (x == -1) {
-
-					}
-					if (y == 1) {
-
-					}
-					if (y == -1) {
-
+						if (x == 1) {
+							b.changeX((int) b.getXY().getX() - 1);
+							b.changeY((int) b.getXY().getY() + 1);
+						}
+						if (x == -1) {
+							b.changeX((int) b.getXY().getX() + 1);
+							b.changeY((int) b.getXY().getY() - 1);
+						}
+						if (y == 1) {
+							b.changeX((int) b.getXY().getX() - 1);
+							b.changeY((int) b.getXY().getY() - 1);
+						}
+						if (y == -1) {
+							b.changeX((int) b.getXY().getX() + 1);
+							b.changeY((int) b.getXY().getY() + 1);
+						}
 					}
 				}
 			}
@@ -234,5 +267,9 @@ public class Board {
 			}
 		}
 		return true;
+	}
+	
+	public static Block getPlacedBlock(int x, int y) {
+		return placedBlocks[y][x];
 	}
 }

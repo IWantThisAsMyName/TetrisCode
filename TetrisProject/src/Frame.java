@@ -16,11 +16,14 @@ import javax.swing.Timer;
 
 public class Frame extends JPanel implements ActionListener, MouseListener, KeyListener {
 	private Block block;
-	//private Image c0 = getImage();
+
+	
+
 	public void paint(Graphics g) {
 		super.paintComponent(g);
 		for (int r = 0; r < 20; r++) {
 			for (int c = 0; c < 10; c++) {
+
 				block = Board.getPlacedBlock(r, c);
 				if (block.color() == 6) {
 					

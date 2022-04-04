@@ -1,24 +1,41 @@
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
+import java.awt.Toolkit;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class Block {
-	private int color;
 	private Point coords;
 	private boolean rotateCenter;
+	private Image image;
 
 	public Block(int color, int x, int y, boolean rotateCenter) {
 		coords.setLocation(x, y);
-		this.color = color;
 		this.rotateCenter = rotateCenter;
+		switch(color) {
+		case 0: 
+			image = getImage("");
+			break;
+		case 1:
+			break;
+		case 2:
+			break;
+		case 3:
+			break;
+		case 4:
+			break;
+		case 5:
+			break;
+		case 6:
+			break;
+		}
 	}
 
 
 	public Point getXY() {
 		return coords;
-	}
-
-	public int color() {
-		return color;
 	}
 
 	public void changeX(int newX) {
@@ -32,6 +49,21 @@ public class Block {
 	public boolean center() {
 		return rotateCenter;
 	}
-
+	
+	
+	public void paint(Graphics g) {
+		Graphics2D g2D = (Graphics2D) g;
+	}
+	
+	private Image getImage(String path) {
+		Image tempImage = null;
+		try {
+			URL imageURL = Block.class.getResource(path);
+			tempImage = Toolkit.getDefaultToolkit().getImage(imageURL);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return tempImage;
+	}
 
 }
