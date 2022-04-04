@@ -1,9 +1,9 @@
 import java.util.ArrayList;
 import java.awt.Graphics2D;
 import java.awt.Graphics;
+import java.applet.Applet;
 
-
-public class Board implements Runnable {
+public class Board extends Applet implements Runnable {
 	private static Block[][] placedBlocks = new Block[21][10];
 	private static ArrayList<Block> moveBlocks = new ArrayList<Block>();
 	private int rotateState;
