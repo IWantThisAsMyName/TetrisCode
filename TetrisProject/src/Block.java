@@ -14,6 +14,7 @@ public class Block {
 	private AffineTransform tx;
 	public Block(int color, int x, int y, boolean rotateCenter) {
 		coords = new Point(x, y);
+		System.out.println(coords.getX());
 		this.rotateCenter = rotateCenter;
 		switch (color) {
 		case 0:

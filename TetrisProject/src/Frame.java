@@ -1,6 +1,7 @@
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Rectangle;
@@ -10,19 +11,42 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.geom.AffineTransform;
+import java.util.ArrayList;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
 public class Frame extends JPanel implements ActionListener, MouseListener, KeyListener {
 	private Block block;
-
+	private AffineTransform tx;
+	
+	
+	
 	public void paint(Graphics g) {
 		Board.setGraphics(g);
+		tx = AffineTransform.getTranslateInstance(1, 1);
+		Graphics2D g2D = (Graphics2D) g;
+		
+		Block[][] drawSquares = Board.getBlocks();
+		ArrayList<Block> drawMSquares = Board.getMoveBlocks();
+		for (Block[] arr : drawSquares) {
+			for (Block b : arr) {
+				init(b.getXY().getX(), b.getXY().getY());
+				
+				g2D.drawImage(b.image(), tx, null);
+			}
+		}
+		for (Block b : drawMSquares) {
+			
+			g2D.drawImage(b.image(), tx, null);
+		}
 	}
 
-	public static void main(String[] arg) {
-		Frame f = new Frame();
+	private void init(double x, double y) {
+		tx.translate(x, y);
+		tx.scale(1, 1);
 	}
 
 	public Frame() {
@@ -31,7 +55,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		f.setBackground(Color.blue);
 		f.add(this);
 		f.setResizable(false);
-		f.setLayout(new GridLayout(1, 2));
+		f.setLayout(new GridLayout(1, 1));
 		f.addMouseListener(this);
 		f.addKeyListener(this);
 		Timer t = new Timer(16, this);

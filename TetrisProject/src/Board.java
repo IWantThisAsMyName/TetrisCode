@@ -10,11 +10,6 @@ public class Board {
 	private static Graphics g2;
 	public Board() {
 	}
-
-	
-
-	
-	
 	
 	public void newPiece() {
 		int random = (int) Math.random() * 7;
@@ -75,6 +70,14 @@ public class Board {
 
 	}
 
+	public static ArrayList<Block> getMoveBlocks(){
+		return moveBlocks;
+	}
+	
+	public static Block[][] getBlocks(){
+		return placedBlocks;
+	}
+	
 	public static void placeBlocks() {
 		for (int i = moveBlocks.size() - 1; i >= moveBlocks.size(); i--) {
 			placedBlocks[(int) moveBlocks.get(i).getXY().getY()][(int) moveBlocks.get(i).getXY().getX()] = moveBlocks
