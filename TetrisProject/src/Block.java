@@ -13,31 +13,29 @@ public class Block {
 	private Image image;
 	private AffineTransform tx;
 	public Block(int color, int x, int y, boolean rotateCenter) {
-		coords.setLocation(x, y);
+		coords = new Point(x, y);
 		this.rotateCenter = rotateCenter;
-		tx = AffineTransform.getTranslateInstance(x*20, y*20);
-		init(x, y);
 		switch (color) {
 		case 0:
 			image = getImage("imgs/blueSquare.png");
 			break;
 		case 1:
-			image = getImage("imgs/blueSquare.png");
+			image = getImage("imgs/cyanSquare.png");
 			break;
 		case 2:
-			image = getImage("imgs/blueSquare.png");
+			image = getImage("imgs/redSquare.png");
 			break;
 		case 3:
-			image = getImage("imgs/blueSquare.png");
+			image = getImage("imgs/greenSquare.png");
 			break;
 		case 4:
-			image = getImage("imgs/blueSquare.png");
+			image = getImage("imgs/orangeSquare.png");
 			break;
 		case 5:
-			image = getImage("imgs/blueSquare.png");
+			image = getImage("imgs/purpleSquare.png");
 			break;
 		case 6:
-			image = getImage("imgs/blueSquare.png");
+			image = getImage("imgs/yellowSquare.png");
 			break;
 		}
 	}
@@ -59,14 +57,8 @@ public class Block {
 		return rotateCenter;
 	}
 	
-	private void init(double a, double b) {
-		tx.setToTranslation(a*20, b*20);
-		tx.scale(1, 1);
-	}
-	
-	public void paint(Graphics g) {
-		Graphics2D g2D = (Graphics2D) g;
-		g2D.drawImage(image, tx, null);
+	public Image image() {
+		return image;
 	}
 
 	private Image getImage(String path) {

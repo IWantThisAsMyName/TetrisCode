@@ -3,28 +3,16 @@ import java.awt.Graphics2D;
 import java.awt.Graphics;
 import java.applet.Applet;
 
-public class Board extends Applet implements Runnable {
+public class Board {
 	private static Block[][] placedBlocks = new Block[21][10];
 	private static ArrayList<Block> moveBlocks = new ArrayList<Block>();
 	private int rotateState;
-	Graphics g;
+	private static Graphics g2;
 	public Board() {
 	}
 
 	
-	public void run() {
-		for(Block[] arr : placedBlocks) {
-			for(Block pBlock : arr) {
-				pBlock.paint(g);
-			}
-		}
-		try {
-			Thread.sleep(10);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+
 	
 	
 	
@@ -269,5 +257,9 @@ public class Board extends Applet implements Runnable {
 	
 	public static Block getPlacedBlock(int x, int y) {
 		return placedBlocks[y][x];
+	}
+	
+	public static void setGraphics(Graphics g) {
+		g2 = g;
 	}
 }

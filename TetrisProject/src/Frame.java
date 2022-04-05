@@ -17,7 +17,9 @@ import javax.swing.Timer;
 public class Frame extends JPanel implements ActionListener, MouseListener, KeyListener {
 	private Block block;
 
-
+	public void paint(Graphics g) {
+		Board.setGraphics(g);
+	}
 
 	public static void main(String[] arg) {
 		Frame f = new Frame();
