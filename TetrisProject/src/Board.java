@@ -43,7 +43,7 @@ public class Board {
 			moveBlocks.add(new Block(3, 3, 0, false));
 			moveBlocks.add(new Block(3, 4, 0, true));
 			moveBlocks.add(new Block(3, 5, 1, false));
-			moveBlocks.add(new Block(3, 3, 0, false));
+			moveBlocks.add(new Block(3, 5, 0, false));
 			return;
 		}
 		// S Piece
@@ -268,7 +268,7 @@ public class Board {
 					System.out.println("Too far Right");
 					return false;
 				}
-			} else if(block.getX() - xL == -1) {
+			} else if(block.getX() - xL == 1) {
 				System.out.println("Too far Left");
 				return false;
 			}
