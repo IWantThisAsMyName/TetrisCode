@@ -97,13 +97,17 @@ public class Board {
 
 	public static void moveSide(boolean direction) {
 		if (direction) {
-			for (Block block : moveBlocks) {
-				block.changeX(block.getX() + 1);
+			if(checkForCollision(1,0,0)) {
+				for (Block block : moveBlocks) {
+					block.changeX(block.getX() + 1);
+				}
 			}
 			return;
 		}
 		for (Block block : moveBlocks) {
-			block.changeX(block.getX() - 1);
+			if(checkForCollision(0,1,0)) {
+				block.changeX(block.getX() - 1);
+			}
 		}
 	}
 
@@ -247,6 +251,29 @@ public class Board {
 		for (int r : remove) {
 
 		}
+	}
+	
+	public static boolean checkForCollision(int xR, int xL,  int y) {
+		for(Block block : moveBlocks) {
+			try {
+				if(placedBlocks[block.getY() + y][block.getX() + xR - xL] != null) {
+					return false;
+				}
+			} catch (Exception e) {
+				return false;
+			}
+			if(xL == 0) {
+				System.out.println("right");
+				if(block.getX() + xR > 10) {
+					System.out.println("Too far Right");
+					return false;
+				}
+			} else if(block.getX() - xL == -1) {
+				System.out.println("Too far Left");
+				return false;
+			}
+		}
+		return true;
 	}
 
 	private static boolean lineIsFull(int index) {
