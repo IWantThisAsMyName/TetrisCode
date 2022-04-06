@@ -7,16 +7,14 @@ import java.awt.geom.AffineTransform;
 import java.net.URL;
 
 public class Block {
-	private Point coords;
+	private int x;
+	private int y;
 	private boolean rotateCenter;
 	private Image image;
-	private AffineTransform tx;
 
 	public Block(int color, int x, int y, boolean rotateCenter) {
-		coords = new Point(x, y);
-		tx = new AffineTransform();
-		init(x,y);
-		System.out.println(coords.getX());
+		this.x = x;
+		this.y = y;
 		this.rotateCenter = rotateCenter;
 		switch (color) {
 		case 0:
@@ -43,26 +41,26 @@ public class Block {
 		}
 	}
 
-	public Point getXY() {
-		return coords;
+	public int getX() {
+		return x;
+	}
+	
+	public int getY() {
+		return y;
 	}
 
-	public void changeX(int newX) {
-		coords.setLocation(newX, coords.getY());
+	public void changeX(int x) {
+		this.x = x;
 	}
 
-	public void changeY(int newY) {
-		coords.setLocation(coords.getX(), newY);
+	public void changeY(int y) {
+		this.y = y;
 	}
 
 	public boolean center() {
 		return rotateCenter;
 	}
 	
-	private void init(double x, double y) {
-		tx.scale(.4, .4);
-		tx.translate(x * 100,  y * 100);
-	}
 	
 	private Image getImage(String path) {
 		Image tempImage = null;
@@ -77,7 +75,7 @@ public class Block {
 
 	public void paint(Graphics g) {
 		Graphics2D g2D = (Graphics2D) g;
-		g2D.drawImage(image, tx, null);
+		g2D.drawImage(image, x * 40, y * 40, 40, 40, null);
 	}
 
 }

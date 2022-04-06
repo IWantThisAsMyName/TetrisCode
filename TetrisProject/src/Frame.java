@@ -39,7 +39,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 
 	public Frame() {
 		JFrame f = new JFrame("Tetris");
-		f.setSize(new Dimension(400, 800));
+		f.setSize(new Dimension(416, 800));
 		f.add(this);
 		f.setResizable(false);
 		f.setLayout(new GridLayout(1, 1));
@@ -90,9 +90,11 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		System.out.println(arg0.getKeyCode());
 		switch (arg0.getKeyCode()) {
 		case 39: // right
+			Board.moveSide(true);
 			break;
 
 		case 37: // left
+			Board.moveSide(false);
 			break;
 
 		case 32: // instant drop, space bar
