@@ -12,7 +12,7 @@ public class Board {
 	}
 	
 	public void newPiece() {
-		int random = (int) Math.random() * 7;
+		int random = (int) (Math.random() * 7);
 		rotateState = 0;
 		// I Piece
 		if (random == 6) {

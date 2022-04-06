@@ -19,29 +19,22 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 public class Frame extends JPanel implements ActionListener, MouseListener, KeyListener {
-	private Block block;
 	private AffineTransform tx;
-	
 	
 	
 	public void paint(Graphics g) {
 		Board.setGraphics(g);
-		tx = AffineTransform.getTranslateInstance(1, 1);
-		Graphics2D g2D = (Graphics2D) g;
-		
-		Block[][] drawSquares = Board.getBlocks();
-		ArrayList<Block> drawMSquares = Board.getMoveBlocks();
-		for (Block[] arr : drawSquares) {
-			for (Block b : arr) {
-				init(b.getXY().getX(), b.getXY().getY());
-				
-				g2D.drawImage(b.image(), tx, null);
+		for(Block[] arr : Board.getBlocks()) {
+			for(Block b : arr) {
+				try {
+					b.paint(g);
+				} catch (Exception e) {}
 			}
 		}
-		for (Block b : drawMSquares) {
-			
-			g2D.drawImage(b.image(), tx, null);
+		for(Block b : Board.getMoveBlocks()) {
+			b.paint(g);
 		}
+		
 	}
 
 	private void init(double x, double y) {
@@ -52,7 +45,6 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	public Frame() {
 		JFrame f = new JFrame("Tetris");
 		f.setSize(new Dimension(400, 800));
-		f.setBackground(Color.blue);
 		f.add(this);
 		f.setResizable(false);
 		f.setLayout(new GridLayout(1, 1));

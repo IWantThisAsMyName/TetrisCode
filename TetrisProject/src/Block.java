@@ -5,38 +5,40 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.geom.AffineTransform;
 import java.net.URL;
-import java.util.ArrayList;
 
 public class Block {
 	private Point coords;
 	private boolean rotateCenter;
 	private Image image;
 	private AffineTransform tx;
+
 	public Block(int color, int x, int y, boolean rotateCenter) {
 		coords = new Point(x, y);
+		tx = new AffineTransform();
+		init(x,y);
 		System.out.println(coords.getX());
 		this.rotateCenter = rotateCenter;
 		switch (color) {
 		case 0:
-			image = getImage("imgs/blueSquare.png");
-			break;
-		case 1:
 			image = getImage("imgs/cyanSquare.png");
 			break;
+		case 1:
+			image = getImage("imgs/yellowSquare.png");
+			break;
 		case 2:
-			image = getImage("imgs/redSquare.png");
+			image = getImage("imgs/blueSquare.png");
 			break;
 		case 3:
-			image = getImage("imgs/greenSquare.png");
-			break;
-		case 4:
 			image = getImage("imgs/orangeSquare.png");
 			break;
+		case 4:
+			image = getImage("imgs/greenSquare.png");
+			break;
 		case 5:
-			image = getImage("imgs/purpleSquare.png");
+			image = getImage("imgs/redSquare.png");
 			break;
 		case 6:
-			image = getImage("imgs/yellowSquare.png");
+			image = getImage("imgs/purpleSquare.png");
 			break;
 		}
 	}
@@ -48,8 +50,7 @@ public class Block {
 	public void changeX(int newX) {
 		coords.setLocation(newX, coords.getY());
 	}
-	
-	
+
 	public void changeY(int newY) {
 		coords.setLocation(coords.getX(), newY);
 	}
@@ -58,10 +59,11 @@ public class Block {
 		return rotateCenter;
 	}
 	
-	public Image image() {
-		return image;
+	private void init(double x, double y) {
+		tx.scale(.4, .4);
+		tx.translate(x * 100,  y * 100);
 	}
-
+	
 	private Image getImage(String path) {
 		Image tempImage = null;
 		try {
@@ -71,6 +73,11 @@ public class Block {
 			e.printStackTrace();
 		}
 		return tempImage;
+	}
+
+	public void paint(Graphics g) {
+		Graphics2D g2D = (Graphics2D) g;
+		g2D.drawImage(image, tx, null);
 	}
 
 }
