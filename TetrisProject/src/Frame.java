@@ -19,7 +19,6 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 public class Frame extends JPanel implements ActionListener, MouseListener, KeyListener {
-	private AffineTransform tx;
 	
 	
 	public void paint(Graphics g) {
@@ -37,10 +36,6 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		
 	}
 
-	private void init(double x, double y) {
-		tx.translate(x, y);
-		tx.scale(1, 1);
-	}
 
 	public Frame() {
 		JFrame f = new JFrame("Tetris");
