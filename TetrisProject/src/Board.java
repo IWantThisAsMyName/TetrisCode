@@ -14,7 +14,7 @@ public class Board {
 		this.level = level;
 	}
 
-	public void newPiece() {
+	public static void newPiece() {
 		int random = (int) (Math.random() * 7);
 		rotateState = 0;
 		// I Piece
@@ -82,13 +82,12 @@ public class Board {
 	}
 
 	public static void placeBlocks() {
-		for (int i = moveBlocks.size() - 1; i >= moveBlocks.size(); i--) {
+		for (int i = moveBlocks.size() - 1; i >= 0; i--) {
 			placedBlocks[(int) moveBlocks.get(i).getY()][(int) moveBlocks.get(i).getX()] = moveBlocks.get(i);
 			moveBlocks.remove(i);
+			
 		}
-		if (checkFail()) {
-
-		}
+		System.out.println(moveBlocks.size());
 	}
 
 	public static void moveDown() {
@@ -146,6 +145,7 @@ public class Board {
 			if (rotateState == 0) {
 				y = -2;
 				x = -2;
+				
 				for (Block b : moveBlocks) {
 					b.changeX((b.getX() + x));
 					b.changeY((b.getY() + y));
@@ -265,6 +265,7 @@ public class Board {
 			} catch (Exception e) {
 				return false;
 			}
+			
 			if (xL == 0) {
 
 				if (block.getX() + xR > 10) {
@@ -278,7 +279,8 @@ public class Board {
 		}
 		return true;
 	}
-
+	
+	
 	private static boolean lineIsFull(int index) {
 		for (int i = 0; i < 10; i++) {
 			if (placedBlocks[index][i] == null) {

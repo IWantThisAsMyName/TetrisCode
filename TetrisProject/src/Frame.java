@@ -27,6 +27,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	private boolean moveDown = false;
 	private int frameNum = 0;
 	private int downCnt = 0;
+	private int leftCnt = 0, rightCnt = 0;
 
 	public void paint(Graphics g) {
 		Board.setGraphics(g);
@@ -53,21 +54,39 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	public void run() {
 		while (true) {
 			frameNum++;
-			if(moveDown && Board.level() <= 18) {
+			if (moveDown && Board.level() <= 18) {
 				downCnt++;
-				if(downCnt >= 2) {
+				if (downCnt >= 2) {
 					Board.moveDown();
 					downCnt = 0;
 				}
 			} else if (frameNum >= levelSpeed[Board.level()]) {
-				Board.moveDown();
+				if (!Board.checkForCollision(0, 0, 1)) {
+					Board.placeBlocks();
+					try {
+						Thread.sleep(16, 666667);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					Board.newPiece();
+				} else {
+					Board.moveDown();
+				}
 				frameNum = 0;
 			}
 			if (moveRight) {
-				Board.moveSide(true);
+				rightCnt ++;
+				if(rightCnt >= 5) {
+					Board.moveSide(true);
+					rightCnt = 0;
+				}
 			}
 			if (moveLeft) {
-				Board.moveSide(false);
+				leftCnt++;
+				if(leftCnt >= 5) {
+					Board.moveSide(false);
+					leftCnt = 0;
+				}
 			}
 			try {
 				Thread.sleep(16, 666667);
@@ -80,7 +99,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 
 	public Frame() {
 		JFrame f = new JFrame("Tetris");
-		f.setSize(new Dimension(405, 800));
+		f.setSize(new Dimension(405, 880));
 		f.add(this);
 		f.setResizable(false);
 		f.setLayout(new GridLayout(1, 1));
