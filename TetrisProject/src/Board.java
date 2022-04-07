@@ -6,10 +6,13 @@ import java.applet.Applet;
 public class Board {
 	private static Block[][] placedBlocks = new Block[21][10];
 	private static ArrayList<Block> moveBlocks = new ArrayList<Block>();
+	private static int[] levelSpeed = {48, 43, 38, 33, 28, 23, 18, 13, 8, 6, 5, 5, 5, 4, 4, 4, 3, 3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1};
+	private static int level;
 	private static int rotateState;
 	private static Graphics g2;
 
-	public Board() {
+	public Board(int level) {
+		this.level = level;
 	}
 
 	public void newPiece() {
