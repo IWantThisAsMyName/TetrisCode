@@ -6,11 +6,12 @@ import java.applet.Applet;
 public class Board {
 	private static Block[][] placedBlocks = new Block[21][10];
 	private static ArrayList<Block> moveBlocks = new ArrayList<Block>();
-	private int rotateState;
+	private static int rotateState;
 	private static Graphics g2;
+
 	public Board() {
 	}
-	
+
 	public void newPiece() {
 		int random = (int) (Math.random() * 7);
 		rotateState = 0;
@@ -70,18 +71,17 @@ public class Board {
 
 	}
 
-	public static ArrayList<Block> getMoveBlocks(){
+	public static ArrayList<Block> getMoveBlocks() {
 		return moveBlocks;
 	}
-	
-	public static Block[][] getBlocks(){
+
+	public static Block[][] getBlocks() {
 		return placedBlocks;
 	}
-	
+
 	public static void placeBlocks() {
 		for (int i = moveBlocks.size() - 1; i >= moveBlocks.size(); i--) {
-			placedBlocks[(int) moveBlocks.get(i).getY()][(int) moveBlocks.get(i).getX()] = moveBlocks
-					.get(i);
+			placedBlocks[(int) moveBlocks.get(i).getY()][(int) moveBlocks.get(i).getX()] = moveBlocks.get(i);
 			moveBlocks.remove(i);
 		}
 		if (checkFail()) {
@@ -97,16 +97,17 @@ public class Board {
 
 	public static void moveSide(boolean direction) {
 		if (direction) {
-			if(checkForCollision(1,0,0)) {
+			if (checkForCollision(1, 0, 0)) {
 				for (Block block : moveBlocks) {
 					block.changeX(block.getX() + 1);
 				}
 			}
 			return;
 		}
-		for (Block block : moveBlocks) {
-			if(checkForCollision(0,1,0)) {
+		if (checkForCollision(0, 1, 0)) {
+			for (Block block : moveBlocks) {
 				block.changeX(block.getX() - 1);
+
 			}
 		}
 	}
@@ -120,11 +121,10 @@ public class Board {
 		return false;
 	}
 
-	private int centerCnt;
-	private int x, y, mod;
-	private Block center;
-
-	public void rotatePiece() {
+	public static void rotatePiece() {
+		int centerCnt;
+		int x, y, mod;
+		Block center = null;
 		rotateState++;
 		if (rotateState == 4) {
 			rotateState = 0;
@@ -138,98 +138,97 @@ public class Board {
 		if (centerCnt == 0) {
 			return;
 		}
-
 		if (centerCnt == 2) {
-			for (int i = -1; i <= 1; i += 2) {
-				while (i == 1) {
+			if (rotateState == 0) {
+				y = -2;
+				x = -2;
+				for (Block b : moveBlocks) {
+					b.changeX((b.getX() + x));
+					b.changeY((b.getY() + y));
+					x++;
+					y++;
 				}
+				return;
+			}
+			if (rotateState == 1) {
+				y = -1;
+				x = 1;
+				for (Block b : moveBlocks) {
+					b.changeX((b.getX() + x));
+					b.changeY((b.getY() + y));
+					x--;
+					y++;
+				}
+				return;
+			}
+			if (rotateState == 2) {
+				y = 2;
+				x = 2;
+				for (Block b : moveBlocks) {
+					b.changeX((b.getX() + x));
+					b.changeY((b.getY() + y));
+					x--;
+					y--;
+				}
+				return;
+			}
+			if (rotateState == 3) {
+				y = 1;
+				x = -1;
+				for (Block b : moveBlocks) {
+					b.changeX((b.getX() + x));
+					b.changeY((b.getY() + y));
+					x++;
+					y--;
+
+				}
+				return;
 			}
 		}
 
-		if (centerCnt == 2) {
-			if (rotateState == 0) {
-				for (Block b : moveBlocks) {
-					y = -1;
-					x = -2;
-					b.changeX((int) (b.getX() + x));
-					b.changeY((int) (b.getY() + y));
-					x++;
-					y++;
+		for (
 
-				}
-				if (rotateState == 1) {
-					for (Block b : moveBlocks) {
-						y = 2;
-						x = 1;
-						b.changeX((int) (b.getX() + x));
-						b.changeY((int) (b.getY() + y));
-						x--;
-						y--;
-					}
-					return;
-				}
-				if (rotateState == 2) {
-					for (Block b : moveBlocks) {
-						y = 1;
-						x = 2;
-						b.changeX((int) (b.getX() + x));
-						b.changeY((int) (b.getY() + y));
-						x--;
-						y--;
-
-					}
-					return;
-				}
-				if (rotateState == 3) {
-					for (Block b : moveBlocks) {
-						y = -1;
-						x = -2;
-						b.changeX((int) (b.getX() + x));
-						b.changeY((int) (b.getY() + y));
-						x++;
-						y++;
-					}
-					return;
-				}
+		Block b : moveBlocks) {
+			if (b.center()) {
+				center = b;
 			}
+		}
 
-			for (Block b : moveBlocks) {
-				if (b.center()) {
-					center = b;
-				}
-			}
+		for (Block b : moveBlocks) {
+			if (!b.center()) {
+				x = (b.getX() - center.getX());
+				y = (b.getY() - center.getY());
 
-			for (Block b : moveBlocks) {
-				if (!b.center()) {
-					x = (int) (b.getX() - center.getX());
-					y = (int) (b.getY() - center.getY());
-					mod = 1;
-					if (x != 0 && y != 0) {
-						if (y == 1) {
-							mod = -1;
-						}
-						if (x == 1) {
-							b.changeY((int) (b.getY() + (2 * mod)));
-						} else {
-							b.changeX((int) (b.getX() + (2 * mod)));
-						}
-					} else {
-						if (x == 1) {
-							b.changeX((int) b.getX() - 1);
-							b.changeY((int) b.getY() + 1);
-						}
-						if (x == -1) {
-							b.changeX((int) b.getX() + 1);
-							b.changeY((int) b.getY() - 1);
-						}
-						if (y == 1) {
-							b.changeX((int) b.getX() - 1);
-							b.changeY((int) b.getY() - 1);
-						}
-						if (y == -1) {
-							b.changeX((int) b.getX() + 1);
-							b.changeY((int) b.getY() + 1);
-						}
+				if (x != 0 && y != 0) {
+					if (x == 1 && y == 1) {
+						b.changeX(b.getX() - 2);
+					}
+					if (x == -1 && y == 1) {
+						b.changeY(b.getY() - 2);
+					}
+					if (x == -1 && y == -1) {
+						b.changeX(b.getX() + 2);
+					}
+					if (x == 1 && y == -1) {
+						b.changeY(b.getY() + 2);
+					}
+
+				} else {
+					if (x == 1) {
+						b.changeX(b.getX() - 1);
+						b.changeY(b.getY() + 1);
+					}
+					if (x == -1) {
+						b.changeX(b.getX() + 1);
+						b.changeY(b.getY() - 1);
+					}
+					if (y == 1) {
+						b.changeX(b.getX() - 1);
+						b.changeY(b.getY() - 1);
+					}
+					if (y == -1) {
+						b.changeX(b.getX() + 1);
+						b.changeY(b.getY() + 1);
 					}
 				}
 			}
@@ -252,24 +251,24 @@ public class Board {
 
 		}
 	}
-	
-	public static boolean checkForCollision(int xR, int xL,  int y) {
-		for(Block block : moveBlocks) {
+
+	public static boolean checkForCollision(int xR, int xL, int y) {
+		for (Block block : moveBlocks) {
 			try {
-				if(placedBlocks[block.getY() + y][block.getX() + xR - xL] != null) {
+				if (placedBlocks[block.getY() + y][block.getX() + xR - xL] != null) {
 					return false;
 				}
 			} catch (Exception e) {
 				return false;
 			}
-			if(xL == 0) {
-				System.out.println("right");
-				if(block.getX() + xR > 10) {
-					System.out.println("Too far Right");
+			if (xL == 0) {
+
+				if (block.getX() + xR > 10) {
+
 					return false;
 				}
-			} else if(block.getX() - xL == 1) {
-				System.out.println("Too far Left");
+			} else if (block.getX() - xL == -1) {
+
 				return false;
 			}
 		}
@@ -284,11 +283,11 @@ public class Board {
 		}
 		return true;
 	}
-	
+
 	public static Block getPlacedBlock(int x, int y) {
 		return placedBlocks[y][x];
 	}
-	
+
 	public static void setGraphics(Graphics g) {
 		g2 = g;
 	}

@@ -14,7 +14,7 @@ public class Block {
 
 	public Block(int color, int x, int y, boolean rotateCenter) {
 		this.x = x;
-		this.y = y;
+		this.y = y + 4;
 		this.rotateCenter = rotateCenter;
 		switch (color) {
 		case 0:

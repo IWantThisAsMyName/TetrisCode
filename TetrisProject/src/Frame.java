@@ -20,9 +20,10 @@ import javax.swing.Timer;
 
 public class Frame extends JPanel implements ActionListener, MouseListener, KeyListener {
 	
-	
+	private boolean held = false;
 	public void paint(Graphics g) {
 		Board.setGraphics(g);
+		g.fillRect(-10, -10, 500, 900);
 		for(Block[] arr : Board.getBlocks()) {
 			for(Block b : arr) {
 				try {
@@ -39,7 +40,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 
 	public Frame() {
 		JFrame f = new JFrame("Tetris");
-		f.setSize(new Dimension(416, 800));
+		f.setSize(new Dimension(405, 800));
 		f.add(this);
 		f.setResizable(false);
 		f.setLayout(new GridLayout(1, 1));
@@ -101,6 +102,10 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 			break;
 
 		case 38: // rotate, up key
+			if(!held) {
+				Board.rotatePiece();
+				held = true;
+			}
 			break;
 
 		case 40: // soft drop, down key
@@ -112,7 +117,9 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	@Override
 	public void keyReleased(KeyEvent arg0) {
 		// TODO Auto-generated method stub
-
+		if(arg0.getKeyCode() == 38) {
+			held = false;
+		}
 	}
 
 	@Override
