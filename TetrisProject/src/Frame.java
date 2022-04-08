@@ -53,7 +53,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 
 	public void run() {
 		while (true) {
-			frameNum++;
+			
 			if (moveDown && Board.level() <= 18) {
 				downCnt++;
 				if (downCnt >= 2) {

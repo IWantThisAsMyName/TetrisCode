@@ -9,6 +9,7 @@ public class Board {
 	private static int level;
 	private static int rotateState;
 	private static Graphics g2;
+	private static Block[][] checkArea = new Block[4][4];
 
 	public Board(int level) {
 		this.level = level;
@@ -85,7 +86,7 @@ public class Board {
 		for (int i = moveBlocks.size() - 1; i >= 0; i--) {
 			placedBlocks[(int) moveBlocks.get(i).getY()][(int) moveBlocks.get(i).getX()] = moveBlocks.get(i);
 			moveBlocks.remove(i);
-			
+
 		}
 		System.out.println(moveBlocks.size());
 	}
@@ -124,6 +125,21 @@ public class Board {
 		return false;
 	}
 
+	private static boolean checkForRotationCollision(int sX, int sY, int cX, int cY) {
+		for (Block b : moveBlocks) {
+			try {
+				if (placedBlocks[b.getY() + sY][b.getX() + sX] != null) {
+					return false;
+				}
+			} catch (Exception e) {
+				return false;
+			}
+			sX += cX;
+			sY += cY;
+		}
+		return true;
+	}
+
 	public static void rotatePiece() {
 		int centerCnt;
 		int x, y, mod;
@@ -145,46 +161,61 @@ public class Board {
 			if (rotateState == 0) {
 				y = -2;
 				x = -2;
-				
-				for (Block b : moveBlocks) {
-					b.changeX((b.getX() + x));
-					b.changeY((b.getY() + y));
-					x++;
-					y++;
+				if (checkForRotationCollision(-2, -2, 1, 1)) {
+					for (Block b : moveBlocks) {
+						b.changeX((b.getX() + x));
+						b.changeY((b.getY() + y));
+						x++;
+						y++;
+					}
+				} else {
+					rotateState--;
 				}
 				return;
 			}
 			if (rotateState == 1) {
 				y = -1;
 				x = 1;
-				for (Block b : moveBlocks) {
-					b.changeX((b.getX() + x));
-					b.changeY((b.getY() + y));
-					x--;
-					y++;
+				if (checkForRotationCollision(1, -1, -1, 1)) {
+					for (Block b : moveBlocks) {
+						b.changeX((b.getX() + x));
+						b.changeY((b.getY() + y));
+						x--;
+						y++;
+					}
+				} else {
+					rotateState--;
 				}
 				return;
 			}
 			if (rotateState == 2) {
 				y = 2;
 				x = 2;
-				for (Block b : moveBlocks) {
-					b.changeX((b.getX() + x));
-					b.changeY((b.getY() + y));
-					x--;
-					y--;
+				if (checkForRotationCollision(2, 2, -1, -1)) {
+					for (Block b : moveBlocks) {
+						b.changeX((b.getX() + x));
+						b.changeY((b.getY() + y));
+						x--;
+						y--;
+					}
+				} else {
+					rotateState--;
 				}
 				return;
 			}
 			if (rotateState == 3) {
 				y = 1;
 				x = -1;
-				for (Block b : moveBlocks) {
-					b.changeX((b.getX() + x));
-					b.changeY((b.getY() + y));
-					x++;
-					y--;
+				if (checkForRotationCollision(-1, 1, 1, -1)) {
+					for (Block b : moveBlocks) {
+						b.changeX((b.getX() + x));
+						b.changeY((b.getY() + y));
+						x++;
+						y--;
 
+					}
+				} else {
+					rotateState--;
 				}
 				return;
 			}
@@ -198,6 +229,12 @@ public class Board {
 			}
 		}
 
+		if (center.getX() == 0) {
+			mod = 1;
+		}
+		if (center.getX() == 9) {
+			mod = -1;
+		}
 		for (Block b : moveBlocks) {
 			if (!b.center()) {
 				x = (b.getX() - center.getX());
@@ -238,6 +275,20 @@ public class Board {
 			}
 		}
 	}
+	
+	private static void createCheckBox() {
+		Block center = null;
+		for(Block b : moveBlocks) {
+			if (b.center()) {
+				center = b;
+			}
+		}
+		for(int y = 0; y < 4; y++) {
+			for(int x = 0; x < 4; x++) {
+				checkArea[y][x] = placedBlocks[center.getY() + y - 2][center.getX() + x - 1];
+			}
+		}
+	}
 
 	private static void clearLines(int[] arr) {
 		ArrayList<Integer> remove = new ArrayList<Integer>();
@@ -265,7 +316,7 @@ public class Board {
 			} catch (Exception e) {
 				return false;
 			}
-			
+
 			if (xL == 0) {
 
 				if (block.getX() + xR > 10) {
@@ -279,8 +330,7 @@ public class Board {
 		}
 		return true;
 	}
-	
-	
+
 	private static boolean lineIsFull(int index) {
 		for (int i = 0; i < 10; i++) {
 			if (placedBlocks[index][i] == null) {
