@@ -3,12 +3,26 @@ import java.awt.Graphics2D;
 import java.awt.Graphics;
 import java.applet.Applet;
 
-public class Board {
+public class Board implements Runnable {
 	private static Block[][] placedBlocks = new Block[21][10];
 	private static ArrayList<Block> moveBlocks = new ArrayList<Block>();
 	private static int level;
 	private static int rotateState;
 	private static Graphics g2;
+	private static final int WALLKICK_NORMAL_180[][][] =
+		{
+			{{ 1, 0},{ 2, 0},{ 1, 1},{ 2, 1},{-1, 0},{-2, 0},{-1, 1},{-2, 1},{ 0,-1},{ 3, 0},{-3, 0}},	
+			{{ 0, 1},{ 0, 2},{-1, 1},{-1, 2},{ 0,-1},{ 0,-2},{-1,-1},{-1,-2},{ 1, 0},{ 0, 3},{ 0,-3}},	
+			{{-1, 0},{-2, 0},{-1,-1},{-2,-1},{ 1, 0},{ 2, 0},{ 1,-1},{ 2,-1},{ 0, 1},{-3, 0},{ 3, 0}},	
+			{{ 0, 1},{ 0, 2},{ 1, 1},{ 1, 2},{ 0,-1},{ 0,-2},{ 1,-1},{ 1,-2},{-1, 0},{ 0, 3},{ 0,-3}},	
+		};
+		private static final int WALLKICK_I_180[][][] =
+		{
+			{{-1, 0},{-2, 0},{ 1, 0},{ 2, 0},{ 0, 1}},													
+			{{ 0, 1},{ 0, 2},{ 0,-1},{ 0,-2},{-1, 0}},													
+			{{ 1, 0},{ 2, 0},{-1, 0},{-2, 0},{ 0,-1}},													
+			{{ 0, 1},{ 0, 2},{ 0,-1},{ 0,-2},{ 1, 0}},												
+	};
 
 	public Board(int level) {
 		this.level = level;
@@ -124,7 +138,7 @@ public class Board {
 		return false;
 	}
 
-	public static void rotatePiece() {
+	public static void rotatePiece(ArrayList<Block> blocks) {
 		int centerCnt;
 		int x, y, mod;
 		Block center = null;
@@ -133,7 +147,7 @@ public class Board {
 			rotateState = 0;
 		}
 		centerCnt = 0;
-		for (Block a : moveBlocks) {
+		for (Block a : blocks) {
 			if (a.center())
 				centerCnt++;
 		}
@@ -146,7 +160,7 @@ public class Board {
 				y = -2;
 				x = -2;
 				
-				for (Block b : moveBlocks) {
+				for (Block b : blocks) {
 					b.changeX((b.getX() + x));
 					b.changeY((b.getY() + y));
 					x++;
@@ -157,7 +171,7 @@ public class Board {
 			if (rotateState == 1) {
 				y = -1;
 				x = 1;
-				for (Block b : moveBlocks) {
+				for (Block b : blocks) {
 					b.changeX((b.getX() + x));
 					b.changeY((b.getY() + y));
 					x--;
@@ -168,7 +182,7 @@ public class Board {
 			if (rotateState == 2) {
 				y = 2;
 				x = 2;
-				for (Block b : moveBlocks) {
+				for (Block b : blocks) {
 					b.changeX((b.getX() + x));
 					b.changeY((b.getY() + y));
 					x--;
@@ -179,7 +193,7 @@ public class Board {
 			if (rotateState == 3) {
 				y = 1;
 				x = -1;
-				for (Block b : moveBlocks) {
+				for (Block b : blocks) {
 					b.changeX((b.getX() + x));
 					b.changeY((b.getY() + y));
 					x++;
@@ -192,13 +206,13 @@ public class Board {
 
 		for (
 
-		Block b : moveBlocks) {
+		Block b : blocks) {
 			if (b.center()) {
 				center = b;
 			}
 		}
 
-		for (Block b : moveBlocks) {
+		for (Block b : blocks) {
 			if (!b.center()) {
 				x = (b.getX() - center.getX());
 				y = (b.getY() - center.getY());
@@ -300,5 +314,37 @@ public class Board {
 
 	public static int level() {
 		return level;
+	}
+	
+	private static boolean rotate;
+	
+	public static void rotate() {
+		rotate = true;
+	}
+	
+	private static ArrayList<Block> rotateCheck = new ArrayList<Block>();
+	
+	public void run() {
+		while(true) {
+			if(rotate) {
+				rotateCheck = moveBlocks;
+				rotatePiece(rotateCheck);
+				if(false) {
+					
+				}
+				rotatePiece(moveBlocks);
+				rotate = false;
+			}
+			try {
+				Thread.sleep(1);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	private static boolean illegal(ArrayList<Block> blocks) {
+		
+		return true;
 	}
 }
