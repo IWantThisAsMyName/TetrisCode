@@ -9,13 +9,15 @@ import java.net.URL;
 public class Block {
 	private int x;
 	private int y;
+	private int color;
 	private boolean rotateCenter;
 	private Image image;
 
 	public Block(int color, int x, int y, boolean rotateCenter) {
 		this.x = x;
-		this.y = y + 4;
+		this.y = y - 1;
 		this.rotateCenter = rotateCenter;
+		this.color = color;
 		switch (color) {
 		case 0:
 			image = getImage("imgs/cyanSquare.png");
@@ -40,6 +42,13 @@ public class Block {
 			break;
 		}
 	}
+	
+	public Block(Block old) {
+		x = old.getX();
+		y = old.getY();
+		rotateCenter = old.center();
+		image = old.image();
+	}
 
 	public int getX() {
 		return x;
@@ -47,6 +56,10 @@ public class Block {
 	
 	public int getY() {
 		return y;
+	}
+	
+	public Image image() {
+		return image;
 	}
 
 	public void changeX(int x) {
