@@ -359,7 +359,7 @@ public class Board implements Runnable {
 		}
 		return;
 	}
-
+	
 	private static boolean illegal(int modX, int modY) {
 		for (Block b : rotateCheck) {
 			System.out.println(b.getX() +", " + b.getY());
