@@ -97,7 +97,6 @@ public class Board implements Runnable {
 			moveBlocks.remove(i);
 
 		}
-		System.out.println(moveBlocks.size());
 	}
 
 	public static void moveDown() {
@@ -362,18 +361,14 @@ public class Board implements Runnable {
 	
 	private static boolean illegal(int modX, int modY) {
 		for (Block b : rotateCheck) {
-			System.out.println(b.getX() +", " + b.getY());
 			try {
 				if (placedBlocks[b.getY() + modY][b.getX() + modX] != null) {
-					System.out.println("Rotation failed: Block occupied");
 					return true;
 				}
 			} catch (Exception e) {
-				System.out.println("Rotation failed: Out of bounds");
 				return true;
 			}
 		}
-		System.out.println("No problems");
 		return false;
 	}
 	
@@ -390,7 +385,6 @@ public class Board implements Runnable {
 		rotatePiece(rotateCheck);
 		for (int i = 0; i < 5; i++) {
 			if (!illegal(normalWallKick[rotateState][i][0], normalWallKick[rotateState][i][1])) {
-				System.out.println(rotate);
 				return rotate;
 			}
 			rotate++;
