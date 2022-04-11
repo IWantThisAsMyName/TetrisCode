@@ -19,6 +19,13 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 public class Frame extends JPanel implements ActionListener, MouseListener, KeyListener, Runnable {
+	Thread rotateThread;
+	public static void main(String[] args) {	
+		Frame f = new Frame();
+		Board.newPiece();
+	}
+	
+	
 	private static int[] levelSpeed = { 48, 43, 38, 33, 28, 23, 18, 13, 8, 6, 5, 5, 5, 4, 4, 4, 3, 3, 3, 2, 2, 2, 2, 2,
 			2, 2, 2, 2, 2, 1, 1 };
 	private boolean moveRight = false;
@@ -30,7 +37,6 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	private int leftCnt = 0, rightCnt = 0;
 
 	public void paint(Graphics g) {
-		Board.setGraphics(g);
 		g.fillRect(-10, -10, 500, 900);
 		for (Block[] arr : Board.getBlocks()) {
 			for (Block b : arr) {
@@ -53,7 +59,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 
 	public void run() {
 		while (true) {
-			
+			frameNum++;
 			if (moveDown && Board.level() <= 18) {
 				downCnt++;
 				if (downCnt >= 2) {
@@ -96,8 +102,11 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 			}
 		}
 	}
-
+	
 	public Frame() {
+		Board board = new Board(0);
+		rotateThread = new Thread(board);
+		rotateThread.start();
 		JFrame f = new JFrame("Tetris");
 		f.setSize(new Dimension(405, 880));
 		f.add(this);
@@ -163,7 +172,8 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 
 		case 38: // rotate, up key
 			if (!held) {
-				Board.rotatePiece();
+				System.out.println("Working");
+				Board.rotate();
 				held = true;
 			}
 			break;
