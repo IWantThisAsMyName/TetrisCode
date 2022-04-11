@@ -37,7 +37,6 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	private int leftCnt = 0, rightCnt = 0;
 
 	public void paint(Graphics g) {
-		Board.setGraphics(g);
 		g.fillRect(-10, -10, 500, 900);
 		for (Block[] arr : Board.getBlocks()) {
 			for (Block b : arr) {
@@ -173,6 +172,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 
 		case 38: // rotate, up key
 			if (!held) {
+				System.out.println("Working");
 				Board.rotate();
 				held = true;
 			}

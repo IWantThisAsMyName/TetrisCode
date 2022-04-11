@@ -8,21 +8,17 @@ public class Board implements Runnable {
 	private static ArrayList<Block> moveBlocks = new ArrayList<Block>();
 	private static int level;
 	private static int rotateState;
-	private static Graphics g2;
-	private static final int WALLKICK_NORMAL_180[][][] =
-		{
-			{{ 1, 0},{ 2, 0},{ 1, 1},{ 2, 1},{-1, 0},{-2, 0},{-1, 1},{-2, 1},{ 0,-1},{ 3, 0},{-3, 0}},	
-			{{ 0, 1},{ 0, 2},{-1, 1},{-1, 2},{ 0,-1},{ 0,-2},{-1,-1},{-1,-2},{ 1, 0},{ 0, 3},{ 0,-3}},	
-			{{-1, 0},{-2, 0},{-1,-1},{-2,-1},{ 1, 0},{ 2, 0},{ 1,-1},{ 2,-1},{ 0, 1},{-3, 0},{ 3, 0}},	
-			{{ 0, 1},{ 0, 2},{ 1, 1},{ 1, 2},{ 0,-1},{ 0,-2},{ 1,-1},{ 1,-2},{-1, 0},{ 0, 3},{ 0,-3}},	
-		};
-		private static final int WALLKICK_I_180[][][] =
-		{
-			{{-1, 0},{-2, 0},{ 1, 0},{ 2, 0},{ 0, 1}},													
-			{{ 0, 1},{ 0, 2},{ 0,-1},{ 0,-2},{-1, 0}},													
-			{{ 1, 0},{ 2, 0},{-1, 0},{-2, 0},{ 0,-1}},													
-			{{ 0, 1},{ 0, 2},{ 0,-1},{ 0,-2},{ 1, 0}},												
-	};
+	// First number is X, second is Y
+	// For a clockwise check multiply values by -1
+	private static final int normalWallKick[][][] = {
+			/* Position 0 -> 1 */ { { 0, 0 }, { 1, 0 }, { 1, -1 }, { 0, 2 }, { 1, 2 } },
+			/* Position 1 -> 2 */ { { 0, 0 }, { -1, 0 }, { 1, -1 }, { 0, -2 }, { -1, -2 } },
+			/* Position 2 -> 3 */ { { 0, 0 }, { -1, 0 }, { -1, -1 }, { 0, 2 }, { -1, 2 } },
+			/* Position 3 -> 0 */ { { 0, 0 }, { 1, 0 }, { 1, 1 }, { 0, -2 }, { 1, -2 } }, };
+	private static final int wallKickIPiece[][][] = { { { -1, 0 }, { -2, 0 }, { 1, 0 }, { 2, 0 }, { 0, 1 } },
+			{ { 0, 1 }, { 0, 2 }, { 0, -1 }, { 0, -2 }, { -1, 0 } },
+			{ { 1, 0 }, { 2, 0 }, { -1, 0 }, { -2, 0 }, { 0, -1 } },
+			{ { 0, 1 }, { 0, 2 }, { 0, -1 }, { 0, -2 }, { 1, 0 } }, };
 
 	public Board(int level) {
 		this.level = level;
@@ -99,7 +95,7 @@ public class Board implements Runnable {
 		for (int i = moveBlocks.size() - 1; i >= 0; i--) {
 			placedBlocks[(int) moveBlocks.get(i).getY()][(int) moveBlocks.get(i).getX()] = moveBlocks.get(i);
 			moveBlocks.remove(i);
-			
+
 		}
 		System.out.println(moveBlocks.size());
 	}
@@ -159,7 +155,7 @@ public class Board implements Runnable {
 			if (rotateState == 0) {
 				y = -2;
 				x = -2;
-				
+
 				for (Block b : blocks) {
 					b.changeX((b.getX() + x));
 					b.changeY((b.getY() + y));
@@ -279,7 +275,7 @@ public class Board implements Runnable {
 			} catch (Exception e) {
 				return false;
 			}
-			
+
 			if (xL == 0) {
 
 				if (block.getX() + xR > 10) {
@@ -293,8 +289,7 @@ public class Board implements Runnable {
 		}
 		return true;
 	}
-	
-	
+
 	private static boolean lineIsFull(int index) {
 		for (int i = 0; i < 10; i++) {
 			if (placedBlocks[index][i] == null) {
@@ -308,43 +303,98 @@ public class Board implements Runnable {
 		return placedBlocks[y][x];
 	}
 
-	public static void setGraphics(Graphics g) {
-		g2 = g;
-	}
-
 	public static int level() {
 		return level;
 	}
-	
+
 	private static boolean rotate;
-	
+
 	public static void rotate() {
 		rotate = true;
 	}
-	
+
 	private static ArrayList<Block> rotateCheck = new ArrayList<Block>();
-	
+
 	public void run() {
-		while(true) {
-			if(rotate) {
-				rotateCheck = moveBlocks;
-				rotatePiece(rotateCheck);
-				if(false) {
+		int r;
+		rotateCheck.add(null);
+		rotateCheck.add(null);
+		rotateCheck.add(null);
+		rotateCheck.add(null);
+		while (true) {
+			if (rotate) {
+				copy(true);
+				r = wallKickCheck();
+				if (r >= 0) {
+					addChanges(normalWallKick[rotateState][r]);
+					rotatePiece(moveBlocks);
 					
 				}
-				rotatePiece(moveBlocks);
 				rotate = false;
 			}
 			try {
 				Thread.sleep(1);
 			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+
 		}
 	}
+
+	// True will copy moveBlocks to rotateCheck, false will copy rotateCheck to
+	// moveBlocks
+	private static void copy(boolean copyDirection) {
+		int i = 0;
+		if (copyDirection) {
+			for (Block block : moveBlocks) {
+				rotateCheck.set(i, new Block(block));
+				i++;
+			}
+			return;
+		}
+		for (Block block : rotateCheck) {
+			moveBlocks.set(i, new Block(block));
+			i++;
+		}
+		return;
+	}
+
+	private static boolean illegal(int modX, int modY) {
+		for (Block b : rotateCheck) {
+			System.out.println(b.getX() +", " + b.getY());
+			try {
+				if (placedBlocks[b.getY() + modY][b.getX() + modX] != null) {
+					System.out.println("Rotation failed: Block occupied");
+					return true;
+				}
+			} catch (Exception e) {
+				System.out.println("Rotation failed: Out of bounds");
+				return true;
+			}
+		}
+		System.out.println("No problems");
+		return false;
+	}
 	
-	private static boolean illegal(ArrayList<Block> blocks) {
-		
-		return true;
+	private static void addChanges(int[] changes) {
+		for(Block b : moveBlocks) {
+			b.changeX(b.getX() + changes[0]);
+			b.changeY(b.getY() + changes[1]);
+		}
+	}
+
+	private static int wallKickCheck() {
+		// Check 0 (Default Check)
+		int rotate = 0;
+		rotatePiece(rotateCheck);
+		for (int i = 0; i < 5; i++) {
+			if (!illegal(normalWallKick[rotateState][i][0], normalWallKick[rotateState][i][1])) {
+				System.out.println(rotate);
+				return rotate;
+			}
+			rotate++;
+		}
+		return -1;
 	}
 }
