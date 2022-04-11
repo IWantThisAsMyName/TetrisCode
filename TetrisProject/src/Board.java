@@ -3,13 +3,22 @@ import java.awt.Graphics2D;
 import java.awt.Graphics;
 import java.applet.Applet;
 
-public class Board {
+public class Board implements Runnable {
 	private static Block[][] placedBlocks = new Block[21][10];
 	private static ArrayList<Block> moveBlocks = new ArrayList<Block>();
 	private static int level;
 	private static int rotateState;
-	private static Graphics g2;
-	private static Block[][] checkArea = new Block[4][4];
+	// First number is X, second is Y
+	// For a clockwise check multiply values by -1
+	private static final int normalWallKick[][][] = {
+			/* Position 0 -> 1 */ { { 0, 0 }, { 1, 0 }, { 1, -1 }, { 0, 2 }, { 1, 2 } },
+			/* Position 1 -> 2 */ { { 0, 0 }, { -1, 0 }, { 1, -1 }, { 0, -2 }, { -1, -2 } },
+			/* Position 2 -> 3 */ { { 0, 0 }, { -1, 0 }, { -1, -1 }, { 0, 2 }, { -1, 2 } },
+			/* Position 3 -> 0 */ { { 0, 0 }, { 1, 0 }, { 1, 1 }, { 0, -2 }, { 1, -2 } }, };
+	private static final int wallKickIPiece[][][] = { { { -1, 0 }, { -2, 0 }, { 1, 0 }, { 2, 0 }, { 0, 1 } },
+			{ { 0, 1 }, { 0, 2 }, { 0, -1 }, { 0, -2 }, { -1, 0 } },
+			{ { 1, 0 }, { 2, 0 }, { -1, 0 }, { -2, 0 }, { 0, -1 } },
+			{ { 0, 1 }, { 0, 2 }, { 0, -1 }, { 0, -2 }, { 1, 0 } }, };
 
 	public Board(int level) {
 		this.level = level;
@@ -125,22 +134,7 @@ public class Board {
 		return false;
 	}
 
-	private static boolean checkForRotationCollision(int sX, int sY, int cX, int cY) {
-		for (Block b : moveBlocks) {
-			try {
-				if (placedBlocks[b.getY() + sY][b.getX() + sX] != null) {
-					return false;
-				}
-			} catch (Exception e) {
-				return false;
-			}
-			sX += cX;
-			sY += cY;
-		}
-		return true;
-	}
-
-	public static void rotatePiece() {
+	public static void rotatePiece(ArrayList<Block> blocks) {
 		int centerCnt;
 		int x, y, mod;
 		Block center = null;
@@ -149,7 +143,7 @@ public class Board {
 			rotateState = 0;
 		}
 		centerCnt = 0;
-		for (Block a : moveBlocks) {
+		for (Block a : blocks) {
 			if (a.center())
 				centerCnt++;
 		}
@@ -161,61 +155,46 @@ public class Board {
 			if (rotateState == 0) {
 				y = -2;
 				x = -2;
-				if (checkForRotationCollision(-2, -2, 1, 1)) {
-					for (Block b : moveBlocks) {
-						b.changeX((b.getX() + x));
-						b.changeY((b.getY() + y));
-						x++;
-						y++;
-					}
-				} else {
-					rotateState--;
+
+				for (Block b : blocks) {
+					b.changeX((b.getX() + x));
+					b.changeY((b.getY() + y));
+					x++;
+					y++;
 				}
 				return;
 			}
 			if (rotateState == 1) {
 				y = -1;
 				x = 1;
-				if (checkForRotationCollision(1, -1, -1, 1)) {
-					for (Block b : moveBlocks) {
-						b.changeX((b.getX() + x));
-						b.changeY((b.getY() + y));
-						x--;
-						y++;
-					}
-				} else {
-					rotateState--;
+				for (Block b : blocks) {
+					b.changeX((b.getX() + x));
+					b.changeY((b.getY() + y));
+					x--;
+					y++;
 				}
 				return;
 			}
 			if (rotateState == 2) {
 				y = 2;
 				x = 2;
-				if (checkForRotationCollision(2, 2, -1, -1)) {
-					for (Block b : moveBlocks) {
-						b.changeX((b.getX() + x));
-						b.changeY((b.getY() + y));
-						x--;
-						y--;
-					}
-				} else {
-					rotateState--;
+				for (Block b : blocks) {
+					b.changeX((b.getX() + x));
+					b.changeY((b.getY() + y));
+					x--;
+					y--;
 				}
 				return;
 			}
 			if (rotateState == 3) {
 				y = 1;
 				x = -1;
-				if (checkForRotationCollision(-1, 1, 1, -1)) {
-					for (Block b : moveBlocks) {
-						b.changeX((b.getX() + x));
-						b.changeY((b.getY() + y));
-						x++;
-						y--;
+				for (Block b : blocks) {
+					b.changeX((b.getX() + x));
+					b.changeY((b.getY() + y));
+					x++;
+					y--;
 
-					}
-				} else {
-					rotateState--;
 				}
 				return;
 			}
@@ -223,19 +202,13 @@ public class Board {
 
 		for (
 
-		Block b : moveBlocks) {
+		Block b : blocks) {
 			if (b.center()) {
 				center = b;
 			}
 		}
 
-		if (center.getX() == 0) {
-			mod = 1;
-		}
-		if (center.getX() == 9) {
-			mod = -1;
-		}
-		for (Block b : moveBlocks) {
+		for (Block b : blocks) {
 			if (!b.center()) {
 				x = (b.getX() - center.getX());
 				y = (b.getY() - center.getY());
@@ -272,20 +245,6 @@ public class Board {
 						b.changeY(b.getY() + 1);
 					}
 				}
-			}
-		}
-	}
-	
-	private static void createCheckBox() {
-		Block center = null;
-		for(Block b : moveBlocks) {
-			if (b.center()) {
-				center = b;
-			}
-		}
-		for(int y = 0; y < 4; y++) {
-			for(int x = 0; x < 4; x++) {
-				checkArea[y][x] = placedBlocks[center.getY() + y - 2][center.getX() + x - 1];
 			}
 		}
 	}
@@ -344,11 +303,98 @@ public class Board {
 		return placedBlocks[y][x];
 	}
 
-	public static void setGraphics(Graphics g) {
-		g2 = g;
-	}
-
 	public static int level() {
 		return level;
+	}
+
+	private static boolean rotate;
+
+	public static void rotate() {
+		rotate = true;
+	}
+
+	private static ArrayList<Block> rotateCheck = new ArrayList<Block>();
+
+	public void run() {
+		int r;
+		rotateCheck.add(null);
+		rotateCheck.add(null);
+		rotateCheck.add(null);
+		rotateCheck.add(null);
+		while (true) {
+			if (rotate) {
+				copy(true);
+				r = wallKickCheck();
+				if (r >= 0) {
+					addChanges(normalWallKick[rotateState][r]);
+					rotatePiece(moveBlocks);
+					
+				}
+				rotate = false;
+			}
+			try {
+				Thread.sleep(1);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+	}
+
+	// True will copy moveBlocks to rotateCheck, false will copy rotateCheck to
+	// moveBlocks
+	private static void copy(boolean copyDirection) {
+		int i = 0;
+		if (copyDirection) {
+			for (Block block : moveBlocks) {
+				rotateCheck.set(i, new Block(block));
+				i++;
+			}
+			return;
+		}
+		for (Block block : rotateCheck) {
+			moveBlocks.set(i, new Block(block));
+			i++;
+		}
+		return;
+	}
+	
+	private static boolean illegal(int modX, int modY) {
+		for (Block b : rotateCheck) {
+			System.out.println(b.getX() +", " + b.getY());
+			try {
+				if (placedBlocks[b.getY() + modY][b.getX() + modX] != null) {
+					System.out.println("Rotation failed: Block occupied");
+					return true;
+				}
+			} catch (Exception e) {
+				System.out.println("Rotation failed: Out of bounds");
+				return true;
+			}
+		}
+		System.out.println("No problems");
+		return false;
+	}
+	
+	private static void addChanges(int[] changes) {
+		for(Block b : moveBlocks) {
+			b.changeX(b.getX() + changes[0]);
+			b.changeY(b.getY() + changes[1]);
+		}
+	}
+
+	private static int wallKickCheck() {
+		// Check 0 (Default Check)
+		int rotate = 0;
+		rotatePiece(rotateCheck);
+		for (int i = 0; i < 5; i++) {
+			if (!illegal(normalWallKick[rotateState][i][0], normalWallKick[rotateState][i][1])) {
+				System.out.println(rotate);
+				return rotate;
+			}
+			rotate++;
+		}
+		return -1;
 	}
 }
