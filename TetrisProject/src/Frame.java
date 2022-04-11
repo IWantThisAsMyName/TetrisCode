@@ -1,40 +1,38 @@
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.GridLayout;
-import java.awt.Image;
-import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.geom.AffineTransform;
-import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
+@SuppressWarnings("serial")
 public class Frame extends JPanel implements ActionListener, MouseListener, KeyListener, Runnable {
 	Thread rotateThread;
-	public static void main(String[] args) {	
+
+	public static void main(String[] args) {
+		@SuppressWarnings("unused")
 		Frame f = new Frame();
 		Board.newPiece();
 	}
-	
-	
+
 	private static int[] levelSpeed = { 48, 43, 38, 33, 28, 23, 18, 13, 8, 6, 5, 5, 5, 4, 4, 4, 3, 3, 3, 2, 2, 2, 2, 2,
 			2, 2, 2, 2, 2, 1, 1 };
 	private boolean moveRight = false;
 	private boolean moveLeft = false;
 	private boolean held = false;
 	private boolean moveDown = false;
+	private boolean contacting = false;
 	private int frameNum = 0;
 	private int downCnt = 0;
 	private int leftCnt = 0, rightCnt = 0;
+	private static int lock = 0;
 
 	public void paint(Graphics g) {
 		g.fillRect(-10, -10, 500, 900);
@@ -68,28 +66,22 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 				}
 			} else if (frameNum >= levelSpeed[Board.level()]) {
 				if (!Board.checkForCollision(0, 0, 1)) {
-					Board.placeBlocks();
-					try {
-						Thread.sleep(16, 666667);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-					Board.newPiece();
+					contacting = true;
 				} else {
 					Board.moveDown();
 				}
 				frameNum = 0;
 			}
 			if (moveRight) {
-				rightCnt ++;
-				if(rightCnt >= 5) {
+				rightCnt++;
+				if (rightCnt >= 5) {
 					Board.moveSide(true);
 					rightCnt = 0;
 				}
 			}
 			if (moveLeft) {
 				leftCnt++;
-				if(leftCnt >= 5) {
+				if (leftCnt >= 5) {
 					Board.moveSide(false);
 					leftCnt = 0;
 				}
@@ -102,7 +94,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 			}
 		}
 	}
-	
+
 	public Frame() {
 		Board board = new Board(0);
 		rotateThread = new Thread(board);
@@ -120,6 +112,34 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		t.start();
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setVisible(true);
+
+		Thread lockDelay = new Thread(new Runnable() {
+			public void run() {
+				while (true) {
+					if (contacting) {
+						lock++;
+						if (!Board.checkForCollision(0, 0, 1)) {
+							System.out.println("Off the bottom");
+							contacting = false;
+						}
+					} else {
+						lock = 0;
+					}
+					if (lock >= 30) {
+						System.out.println("Placing block");
+						Board.placeBlocks();
+						contacting = false;
+					}
+					try {
+						Thread.sleep(16, 666667);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		});
+		lockDelay.start();
 
 	}
 

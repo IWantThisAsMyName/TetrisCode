@@ -1,7 +1,5 @@
 import java.util.ArrayList;
-import java.awt.Graphics2D;
-import java.awt.Graphics;
-import java.applet.Applet;
+
 
 public class Board implements Runnable {
 	private static Block[][] placedBlocks = new Block[21][10];
@@ -15,12 +13,12 @@ public class Board implements Runnable {
 			/* Position 1 -> 2 */ { { 0, 0 }, { -1, 0 }, { 1, -1 }, { 0, -2 }, { -1, -2 } },
 			/* Position 2 -> 3 */ { { 0, 0 }, { -1, 0 }, { -1, -1 }, { 0, 2 }, { -1, 2 } },
 			/* Position 3 -> 0 */ { { 0, 0 }, { 1, 0 }, { 1, 1 }, { 0, -2 }, { 1, -2 } }, };
-	private static final int wallKickIPiece[][][] = 
-			{ { { 0, 0 }, { 2, 0 }, { -1, 0 }, { 2, 1 }, { -1, -2 } },
-			{ { 0, 0 }, { 1, 0 }, {-2, 0 }, { 1, -2 }, { -2, 1 } },
+	private static final int wallKickIPiece[][][] = { { { 0, 0 }, { 2, 0 }, { -1, 0 }, { 2, 1 }, { -1, -2 } },
+			{ { 0, 0 }, { 1, 0 }, { -2, 0 }, { 1, -2 }, { -2, 1 } },
 			{ { 0, 0 }, { -2, 0 }, { 1, 0 }, { -2, -1 }, { 1, 2 } },
 			{ { 0, 0 }, { -1, 0 }, { 2, 0 }, { -1, 2 }, { 2, -1 } }, };
-
+	
+	@SuppressWarnings("static-access")
 	public Board(int level) {
 		this.level = level;
 	}
@@ -28,8 +26,9 @@ public class Board implements Runnable {
 	public static void newPiece() {
 		int random = (int) (Math.random() * 7);
 		random = 6;
-		if(!safeGen) {
-			while(safeGen) {}
+		if (!safeGen) {
+			while (safeGen) {
+			}
 		}
 		// I Piece
 		if (random == 6) {
@@ -171,11 +170,11 @@ public class Board implements Runnable {
 					x++;
 					y++;
 				}
-				if(subtract) {
+				if (subtract) {
 					rotateState--;
 					subtract = false;
 				}
-				if(rotateState < 0) {
+				if (rotateState < 0) {
 					rotateState = 3;
 				}
 				return;
@@ -189,11 +188,11 @@ public class Board implements Runnable {
 					x--;
 					y++;
 				}
-				if(subtract) {
+				if (subtract) {
 					rotateState--;
 					subtract = false;
 				}
-				if(rotateState < 0) {
+				if (rotateState < 0) {
 					rotateState = 3;
 				}
 				return;
@@ -207,11 +206,11 @@ public class Board implements Runnable {
 					x--;
 					y--;
 				}
-				if(subtract) {
+				if (subtract) {
 					rotateState--;
 					subtract = false;
 				}
-				if(rotateState < 0) {
+				if (rotateState < 0) {
 					rotateState = 3;
 				}
 				return;
@@ -226,11 +225,11 @@ public class Board implements Runnable {
 					y--;
 
 				}
-				if(subtract) {
+				if (subtract) {
 					rotateState--;
 					subtract = false;
 				}
-				if(rotateState < 0) {
+				if (rotateState < 0) {
 					rotateState = 3;
 				}
 				return;
@@ -361,7 +360,6 @@ public class Board implements Runnable {
 		rotateCheck.add(null);
 		while (true) {
 			if (rotate) {
-				System.out.println(rotateState);
 				safeGen = false;
 				copy();
 				if (moveBlocks.get(0).line()) {
@@ -376,9 +374,8 @@ public class Board implements Runnable {
 						addChanges(normalWallKick[rotateState][r]);
 						rotatePiece(moveBlocks);
 					}
-					
+
 				}
-				System.out.println(rotateState);
 				rotate = false;
 				safeGen = true;
 			}
@@ -422,7 +419,7 @@ public class Board implements Runnable {
 			b.changeY(b.getY() + changes[1]);
 		}
 	}
-	
+
 	private static boolean subtract;
 
 	private static int lineWallKick() {
@@ -431,7 +428,6 @@ public class Board implements Runnable {
 		rotatePiece(rotateCheck);
 		for (int i = 0; i < 5; i++) {
 			if (legal(wallKickIPiece[rotateState][i])) {
-				System.out.println(rotate);
 				return rotate;
 			}
 			rotate++;
