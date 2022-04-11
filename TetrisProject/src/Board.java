@@ -28,13 +28,16 @@ public class Board implements Runnable {
 	public static void newPiece() {
 		int random = (int) (Math.random() * 7);
 		random = 6;
-		rotateState = 0;
+		if(!safeGen) {
+			while(safeGen) {}
+		}
 		// I Piece
 		if (random == 6) {
 			moveBlocks.add(new Block(0, 3, 0, false, true));
 			moveBlocks.add(new Block(0, 4, 0, true));
 			moveBlocks.add(new Block(0, 5, 0, true));
 			moveBlocks.add(new Block(0, 6, 0, false));
+			rotateState = 0;
 			return;
 		}
 		// O Piece
@@ -43,6 +46,7 @@ public class Board implements Runnable {
 			moveBlocks.add(new Block(1, 4, 0, false));
 			moveBlocks.add(new Block(1, 5, 1, false));
 			moveBlocks.add(new Block(1, 4, 1, false));
+			rotateState = 0;
 			return;
 		}
 		// J Piece
@@ -51,6 +55,7 @@ public class Board implements Runnable {
 			moveBlocks.add(new Block(2, 4, 0, true));
 			moveBlocks.add(new Block(2, 5, 0, false));
 			moveBlocks.add(new Block(2, 3, 1, false));
+			rotateState = 0;
 			return;
 		}
 		// L Piece
@@ -59,6 +64,7 @@ public class Board implements Runnable {
 			moveBlocks.add(new Block(3, 4, 0, true));
 			moveBlocks.add(new Block(3, 5, 1, false));
 			moveBlocks.add(new Block(3, 5, 0, false));
+			rotateState = 0;
 			return;
 		}
 		// S Piece
@@ -67,6 +73,7 @@ public class Board implements Runnable {
 			moveBlocks.add(new Block(4, 4, 0, true));
 			moveBlocks.add(new Block(4, 4, 1, false));
 			moveBlocks.add(new Block(4, 5, 1, false));
+			rotateState = 0;
 			return;
 		}
 		// Z Piece
@@ -75,6 +82,7 @@ public class Board implements Runnable {
 			moveBlocks.add(new Block(5, 4, 1, false));
 			moveBlocks.add(new Block(5, 4, 0, true));
 			moveBlocks.add(new Block(5, 5, 0, false));
+			rotateState = 0;
 			return;
 		}
 		// T Piece
@@ -163,6 +171,13 @@ public class Board implements Runnable {
 					x++;
 					y++;
 				}
+				if(subtract) {
+					rotateState--;
+					subtract = false;
+				}
+				if(rotateState < 0) {
+					rotateState = 3;
+				}
 				return;
 			}
 			if (rotateState == 1) {
@@ -173,6 +188,13 @@ public class Board implements Runnable {
 					b.changeY((b.getY() + y));
 					x--;
 					y++;
+				}
+				if(subtract) {
+					rotateState--;
+					subtract = false;
+				}
+				if(rotateState < 0) {
+					rotateState = 3;
 				}
 				return;
 			}
@@ -185,6 +207,13 @@ public class Board implements Runnable {
 					x--;
 					y--;
 				}
+				if(subtract) {
+					rotateState--;
+					subtract = false;
+				}
+				if(rotateState < 0) {
+					rotateState = 3;
+				}
 				return;
 			}
 			if (rotateState == 3) {
@@ -196,6 +225,13 @@ public class Board implements Runnable {
 					x++;
 					y--;
 
+				}
+				if(subtract) {
+					rotateState--;
+					subtract = false;
+				}
+				if(rotateState < 0) {
+					rotateState = 3;
 				}
 				return;
 			}
@@ -315,6 +351,7 @@ public class Board implements Runnable {
 	}
 
 	private static ArrayList<Block> rotateCheck = new ArrayList<Block>();
+	private static boolean safeGen;
 
 	public void run() {
 		int r;
@@ -324,6 +361,8 @@ public class Board implements Runnable {
 		rotateCheck.add(null);
 		while (true) {
 			if (rotate) {
+				System.out.println(rotateState);
+				safeGen = false;
 				copy();
 				if (moveBlocks.get(0).line()) {
 					r = lineWallKick();
@@ -339,7 +378,9 @@ public class Board implements Runnable {
 					}
 					
 				}
+				System.out.println(rotateState);
 				rotate = false;
+				safeGen = true;
 			}
 			try {
 				Thread.sleep(1);
@@ -381,12 +422,16 @@ public class Board implements Runnable {
 			b.changeY(b.getY() + changes[1]);
 		}
 	}
+	
+	private static boolean subtract;
 
 	private static int lineWallKick() {
 		int rotate = 0;
+		subtract = true;
 		rotatePiece(rotateCheck);
 		for (int i = 0; i < 5; i++) {
 			if (legal(wallKickIPiece[rotateState][i])) {
+				System.out.println(rotate);
 				return rotate;
 			}
 			rotate++;
