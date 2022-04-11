@@ -172,7 +172,6 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 
 		case 38: // rotate, up key
 			if (!held) {
-				System.out.println("Working");
 				Board.rotate();
 				held = true;
 			}

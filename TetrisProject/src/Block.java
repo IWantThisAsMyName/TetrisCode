@@ -11,6 +11,7 @@ public class Block {
 	private int y;
 	private int color;
 	private boolean rotateCenter;
+	private boolean line;
 	private Image image;
 
 	public Block(int color, int x, int y, boolean rotateCenter) {
@@ -18,6 +19,37 @@ public class Block {
 		this.y = y - 1;
 		this.rotateCenter = rotateCenter;
 		this.color = color;
+		switch (color) {
+		case 0:
+			image = getImage("imgs/cyanSquare.png");
+			break;
+		case 1:
+			image = getImage("imgs/yellowSquare.png");
+			break;
+		case 2:
+			image = getImage("imgs/blueSquare.png");
+			break;
+		case 3:
+			image = getImage("imgs/orangeSquare.png");
+			break;
+		case 4:
+			image = getImage("imgs/greenSquare.png");
+			break;
+		case 5:
+			image = getImage("imgs/redSquare.png");
+			break;
+		case 6:
+			image = getImage("imgs/purpleSquare.png");
+			break;
+		}
+	}
+	
+	public Block(int color, int x, int y, boolean rotateCenter, boolean line) {
+		this.x = x;
+		this.y = y - 1;
+		this.rotateCenter = rotateCenter;
+		this.color = color;
+		this.line = line;
 		switch (color) {
 		case 0:
 			image = getImage("imgs/cyanSquare.png");
@@ -74,6 +106,9 @@ public class Block {
 		return rotateCenter;
 	}
 	
+	public boolean line() {
+		return line;
+	}
 	
 	private Image getImage(String path) {
 		Image tempImage = null;

@@ -15,10 +15,11 @@ public class Board implements Runnable {
 			/* Position 1 -> 2 */ { { 0, 0 }, { -1, 0 }, { 1, -1 }, { 0, -2 }, { -1, -2 } },
 			/* Position 2 -> 3 */ { { 0, 0 }, { -1, 0 }, { -1, -1 }, { 0, 2 }, { -1, 2 } },
 			/* Position 3 -> 0 */ { { 0, 0 }, { 1, 0 }, { 1, 1 }, { 0, -2 }, { 1, -2 } }, };
-	private static final int wallKickIPiece[][][] = { { { -1, 0 }, { -2, 0 }, { 1, 0 }, { 2, 0 }, { 0, 1 } },
-			{ { 0, 1 }, { 0, 2 }, { 0, -1 }, { 0, -2 }, { -1, 0 } },
-			{ { 1, 0 }, { 2, 0 }, { -1, 0 }, { -2, 0 }, { 0, -1 } },
-			{ { 0, 1 }, { 0, 2 }, { 0, -1 }, { 0, -2 }, { 1, 0 } }, };
+	private static final int wallKickIPiece[][][] = 
+			{ { { 0, 0 }, { 2, 0 }, { -1, 0 }, { 2, 1 }, { -1, -2 } },
+			{ { 0, 0 }, { 1, 0 }, {-2, 0 }, { 1, -2 }, { -2, 1 } },
+			{ { 0, 0 }, { -2, 0 }, { 1, 0 }, { -2, -1 }, { 1, 2 } },
+			{ { 0, 0 }, { -1, 0 }, { 2, 0 }, { -1, 2 }, { 2, -1 } }, };
 
 	public Board(int level) {
 		this.level = level;
@@ -26,10 +27,11 @@ public class Board implements Runnable {
 
 	public static void newPiece() {
 		int random = (int) (Math.random() * 7);
+		random = 6;
 		rotateState = 0;
 		// I Piece
 		if (random == 6) {
-			moveBlocks.add(new Block(0, 3, 0, false));
+			moveBlocks.add(new Block(0, 3, 0, false, true));
 			moveBlocks.add(new Block(0, 4, 0, true));
 			moveBlocks.add(new Block(0, 5, 0, true));
 			moveBlocks.add(new Block(0, 6, 0, false));
@@ -322,11 +324,19 @@ public class Board implements Runnable {
 		rotateCheck.add(null);
 		while (true) {
 			if (rotate) {
-				copy(true);
-				r = wallKickCheck();
-				if (r >= 0) {
-					addChanges(normalWallKick[rotateState][r]);
-					rotatePiece(moveBlocks);
+				copy();
+				if (moveBlocks.get(0).line()) {
+					r = lineWallKick();
+					if (r != -1) {
+						addChanges(wallKickIPiece[rotateState][r]);
+						rotatePiece(moveBlocks);
+					}
+				} else {
+					r = wallKickCheck();
+					if (r != -1) {
+						addChanges(normalWallKick[rotateState][r]);
+						rotatePiece(moveBlocks);
+					}
 					
 				}
 				rotate = false;
@@ -343,40 +353,45 @@ public class Board implements Runnable {
 
 	// True will copy moveBlocks to rotateCheck, false will copy rotateCheck to
 	// moveBlocks
-	private static void copy(boolean copyDirection) {
+	private static void copy() {
 		int i = 0;
-		if (copyDirection) {
-			for (Block block : moveBlocks) {
-				rotateCheck.set(i, new Block(block));
-				i++;
-			}
-			return;
-		}
-		for (Block block : rotateCheck) {
-			moveBlocks.set(i, new Block(block));
+		for (Block block : moveBlocks) {
+			rotateCheck.set(i, new Block(block));
 			i++;
 		}
 		return;
 	}
-	
-	private static boolean illegal(int modX, int modY) {
+
+	private static boolean legal(int[] changes) {
 		for (Block b : rotateCheck) {
 			try {
-				if (placedBlocks[b.getY() + modY][b.getX() + modX] != null) {
-					return true;
+				if (placedBlocks[b.getY() + changes[1]][b.getX() + changes[0]] != null) {
+					return false;
 				}
 			} catch (Exception e) {
-				return true;
+				return false;
 			}
 		}
-		return false;
+		return true;
 	}
-	
+
 	private static void addChanges(int[] changes) {
-		for(Block b : moveBlocks) {
+		for (Block b : moveBlocks) {
 			b.changeX(b.getX() + changes[0]);
 			b.changeY(b.getY() + changes[1]);
 		}
+	}
+
+	private static int lineWallKick() {
+		int rotate = 0;
+		rotatePiece(rotateCheck);
+		for (int i = 0; i < 5; i++) {
+			if (legal(wallKickIPiece[rotateState][i])) {
+				return rotate;
+			}
+			rotate++;
+		}
+		return -1;
 	}
 
 	private static int wallKickCheck() {
@@ -384,7 +399,7 @@ public class Board implements Runnable {
 		int rotate = 0;
 		rotatePiece(rotateCheck);
 		for (int i = 0; i < 5; i++) {
-			if (!illegal(normalWallKick[rotateState][i][0], normalWallKick[rotateState][i][1])) {
+			if (legal(normalWallKick[rotateState][i])) {
 				return rotate;
 			}
 			rotate++;
