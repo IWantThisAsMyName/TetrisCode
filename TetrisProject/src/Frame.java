@@ -25,6 +25,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	private boolean moveRight = false;
 	private boolean moveLeft = false;
 	private boolean held = false;
+	private boolean spaceHeld = false;
 	private boolean moveDown = false;
 	private boolean contacting = false;
 	private int frameNum = 0;
@@ -186,7 +187,10 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 			break;
 
 		case 32: // instant drop, space bar
-			Board.hardDrop();
+			if(!spaceHeld) {
+				Board.hardDrop();
+				spaceHeld = true;
+			}
 			break;
 
 		case 38: // rotate, up key
@@ -215,6 +219,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 			moveLeft = false;
 			break;
 		case 32:
+			spaceHeld = false;
 			break;
 		case 38:
 			held = false;

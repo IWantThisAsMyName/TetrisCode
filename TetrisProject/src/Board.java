@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 public class Board implements Runnable {
-	private static Block[][] placedBlocks = new Block[22][10];
+	private static Block[][] placedBlocks = new Block[23][10];
 	private static ArrayList<Block> moveBlocks = new ArrayList<Block>();
 	private static int level;
 	private static int rotateState;
