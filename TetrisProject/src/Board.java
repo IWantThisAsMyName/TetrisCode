@@ -1,8 +1,7 @@
 import java.util.ArrayList;
 
-
 public class Board implements Runnable {
-	private static Block[][] placedBlocks = new Block[21][10];
+	private static Block[][] placedBlocks = new Block[22][10];
 	private static ArrayList<Block> moveBlocks = new ArrayList<Block>();
 	private static int level;
 	private static int rotateState;
@@ -17,21 +16,68 @@ public class Board implements Runnable {
 			{ { 0, 0 }, { 1, 0 }, { -2, 0 }, { 1, -2 }, { -2, 1 } },
 			{ { 0, 0 }, { -2, 0 }, { 1, 0 }, { -2, -1 }, { 1, 2 } },
 			{ { 0, 0 }, { -1, 0 }, { 2, 0 }, { -1, 2 }, { 2, -1 } }, };
-	
+	private static ArrayList<Integer> primaryGen;
+	private static ArrayList<Integer> secondaryGen;
+	private static ArrayList<Boolean> basicCheck;
+
 	@SuppressWarnings("static-access")
 	public Board(int level) {
+		primaryGen = new ArrayList<Integer>();
+		secondaryGen = new ArrayList<Integer>();
+		basicCheck = new ArrayList<Boolean>();
+		for (int i = 0; i < 7; i++) {
+			basicCheck.add(true);
+		}
 		this.level = level;
 	}
+	
+	public static void start() {
+		generatePieces();
+		newPiece();
+	}
 
-	public static void newPiece() {
-		int random = (int) (Math.random() * 7);
-		random = 6;
-		if (!safeGen) {
-			while (safeGen) {
-			}
+	private static void generatePieces() {
+		if (primaryGen.isEmpty() && secondaryGen.isEmpty()) {
+			primaryGen = new7Bag();
+			secondaryGen = new7Bag();
+			return;
 		}
+		
+		if(primaryGen.size() == 0) {
+			for(int i = 0; i < 7; i++) {
+				primaryGen.add(secondaryGen.get(i));
+			}
+			secondaryGen = new7Bag();
+			return;
+		}
+		return;
+	}
+
+	private static ArrayList<Integer> new7Bag() {
+		ArrayList<Integer> temp = new ArrayList<Integer>();
+		int random;
+		while (true) {
+			if (temp.size() == 7) {
+				for (int i = 0; i < 7; i++) {
+					basicCheck.set(i, true);
+				}
+				return temp;
+			}
+			random = (int) (Math.random() * 7);
+			if(basicCheck.get(random)) {
+				temp.add(random);
+				basicCheck.set(random, false);
+			}
+			
+		}
+
+	}
+
+	private static void newPiece() {
+		int piece = primaryGen.get(0);
+		primaryGen.remove(0);
 		// I Piece
-		if (random == 6) {
+		if (piece == 6) {
 			moveBlocks.add(new Block(0, 3, 0, false, true));
 			moveBlocks.add(new Block(0, 4, 0, true));
 			moveBlocks.add(new Block(0, 5, 0, true));
@@ -40,7 +86,7 @@ public class Board implements Runnable {
 			return;
 		}
 		// O Piece
-		if (random == 5) {
+		if (piece == 5) {
 			moveBlocks.add(new Block(1, 5, 0, false));
 			moveBlocks.add(new Block(1, 4, 0, false));
 			moveBlocks.add(new Block(1, 5, 1, false));
@@ -48,26 +94,26 @@ public class Board implements Runnable {
 			rotateState = 0;
 			return;
 		}
-		// J Piece
-		if (random == 4) {
-			moveBlocks.add(new Block(2, 3, 0, false));
-			moveBlocks.add(new Block(2, 4, 0, true));
-			moveBlocks.add(new Block(2, 5, 0, false));
+		// L Piece
+		if (piece == 4) {
 			moveBlocks.add(new Block(2, 3, 1, false));
+			moveBlocks.add(new Block(2, 4, 1, true));
+			moveBlocks.add(new Block(2, 5, 1, false));
+			moveBlocks.add(new Block(2, 3, 0, false));
 			rotateState = 0;
 			return;
 		}
-		// L Piece
-		if (random == 3) {
-			moveBlocks.add(new Block(3, 3, 0, false));
-			moveBlocks.add(new Block(3, 4, 0, true));
-			moveBlocks.add(new Block(3, 5, 1, false));
+		// J Piece
+		if (piece == 3) {
+			moveBlocks.add(new Block(3, 3, 1, false));
+			moveBlocks.add(new Block(3, 4, 1, true));
 			moveBlocks.add(new Block(3, 5, 0, false));
+			moveBlocks.add(new Block(3, 5, 1, false));
 			rotateState = 0;
 			return;
 		}
 		// S Piece
-		if (random == 2) {
+		if (piece == 2) {
 			moveBlocks.add(new Block(4, 3, 0, false));
 			moveBlocks.add(new Block(4, 4, 0, true));
 			moveBlocks.add(new Block(4, 4, 1, false));
@@ -76,7 +122,7 @@ public class Board implements Runnable {
 			return;
 		}
 		// Z Piece
-		if (random == 1) {
+		if (piece == 1) {
 			moveBlocks.add(new Block(5, 3, 1, false));
 			moveBlocks.add(new Block(5, 4, 1, false));
 			moveBlocks.add(new Block(5, 4, 0, true));
@@ -85,11 +131,10 @@ public class Board implements Runnable {
 			return;
 		}
 		// T Piece
-		moveBlocks.add(new Block(6, 3, 0, false));
-		moveBlocks.add(new Block(6, 4, 1, false));
-		moveBlocks.add(new Block(6, 4, 0, true));
-		moveBlocks.add(new Block(6, 5, 0, false));
-
+		moveBlocks.add(new Block(6, 3, 1, false));
+		moveBlocks.add(new Block(6, 4, 0, false));
+		moveBlocks.add(new Block(6, 4, 1, true));
+		moveBlocks.add(new Block(6, 5, 1, false));
 	}
 
 	public static ArrayList<Block> getMoveBlocks() {
@@ -106,6 +151,9 @@ public class Board implements Runnable {
 			moveBlocks.remove(i);
 
 		}
+		checkFail();
+		generatePieces();
+		newPiece();
 	}
 
 	public static void moveDown() {
@@ -325,6 +373,17 @@ public class Board implements Runnable {
 		}
 		return true;
 	}
+	
+	public static void hardDrop() {
+		while(true) {
+			if(checkForCollision(0, 0, 1)) {
+				moveDown();
+			} else {
+				placeBlocks();
+				return;
+			}
+		}
+	}
 
 	private static boolean lineIsFull(int index) {
 		for (int i = 0; i < 10; i++) {
@@ -350,7 +409,6 @@ public class Board implements Runnable {
 	}
 
 	private static ArrayList<Block> rotateCheck = new ArrayList<Block>();
-	private static boolean safeGen;
 
 	public void run() {
 		int r;
@@ -360,7 +418,6 @@ public class Board implements Runnable {
 		rotateCheck.add(null);
 		while (true) {
 			if (rotate) {
-				safeGen = false;
 				copy();
 				if (moveBlocks.get(0).line()) {
 					r = lineWallKick();
@@ -377,7 +434,6 @@ public class Board implements Runnable {
 
 				}
 				rotate = false;
-				safeGen = true;
 			}
 			try {
 				Thread.sleep(1);
@@ -434,6 +490,7 @@ public class Board implements Runnable {
 		}
 		return -1;
 	}
+	
 
 	private static int wallKickCheck() {
 		// Check 0 (Default Check)

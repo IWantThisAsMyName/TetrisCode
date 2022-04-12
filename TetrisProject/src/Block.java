@@ -1,15 +1,12 @@
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.Point;
 import java.awt.Toolkit;
-import java.awt.geom.AffineTransform;
 import java.net.URL;
 
 public class Block {
 	private int x;
 	private int y;
-	private int color;
 	private boolean rotateCenter;
 	private boolean line;
 	private Image image;
@@ -18,7 +15,6 @@ public class Block {
 		this.x = x;
 		this.y = y - 1;
 		this.rotateCenter = rotateCenter;
-		this.color = color;
 		switch (color) {
 		case 0:
 			image = getImage("imgs/cyanSquare.png");
@@ -48,7 +44,6 @@ public class Block {
 		this.x = x;
 		this.y = y - 1;
 		this.rotateCenter = rotateCenter;
-		this.color = color;
 		this.line = line;
 		switch (color) {
 		case 0:

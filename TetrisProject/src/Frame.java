@@ -17,9 +17,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	Thread rotateThread;
 
 	public static void main(String[] args) {
-		@SuppressWarnings("unused")
 		Frame f = new Frame();
-		Board.newPiece();
 	}
 
 	private static int[] levelSpeed = { 48, 43, 38, 33, 28, 23, 18, 13, 8, 6, 5, 5, 5, 4, 4, 4, 3, 3, 3, 2, 2, 2, 2, 2,
@@ -99,6 +97,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		Board board = new Board(0);
 		rotateThread = new Thread(board);
 		rotateThread.start();
+		Board.start();
 		JFrame f = new JFrame("Tetris");
 		f.setSize(new Dimension(405, 880));
 		f.add(this);
@@ -118,7 +117,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 				while (true) {
 					if (contacting) {
 						lock++;
-						if (!Board.checkForCollision(0, 0, 1)) {
+						if (Board.checkForCollision(0, 0, 1)) {
 							System.out.println("Off the bottom");
 							contacting = false;
 						}
@@ -126,7 +125,6 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 						lock = 0;
 					}
 					if (lock >= 30) {
-						System.out.println("Placing block");
 						Board.placeBlocks();
 						contacting = false;
 					}
@@ -188,6 +186,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 			break;
 
 		case 32: // instant drop, space bar
+			Board.hardDrop();
 			break;
 
 		case 38: // rotate, up key
