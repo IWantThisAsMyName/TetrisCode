@@ -3,8 +3,13 @@ import java.util.ArrayList;
 public class Board implements Runnable {
 	private static Block[][] placedBlocks = new Block[23][10];
 	private static ArrayList<Block> moveBlocks = new ArrayList<Block>();
+	private static int heldBlock;
+	private static int current;
 	private static int level;
 	private static int rotateState;
+	private static int score;
+	private static int linesCleared;
+	private static boolean heldMove;
 	// First number is X, second is Y
 	// For a clockwise check multiply values by -1
 	private static final int normalWallKick[][][] = {
@@ -19,18 +24,24 @@ public class Board implements Runnable {
 	private static ArrayList<Integer> primaryGen;
 	private static ArrayList<Integer> secondaryGen;
 	private static ArrayList<Boolean> basicCheck;
+	private static ArrayList<Integer> lineRemoval;
 
 	@SuppressWarnings("static-access")
 	public Board(int level) {
 		primaryGen = new ArrayList<Integer>();
 		secondaryGen = new ArrayList<Integer>();
 		basicCheck = new ArrayList<Boolean>();
+		lineRemoval = new ArrayList<Integer>();
+		score = 0;
+		linesCleared = 0;
+		heldBlock = -1;
+		heldMove = false;
 		for (int i = 0; i < 7; i++) {
 			basicCheck.add(true);
 		}
 		this.level = level;
 	}
-	
+
 	public static void start() {
 		generatePieces();
 		newPiece();
@@ -42,9 +53,9 @@ public class Board implements Runnable {
 			secondaryGen = new7Bag();
 			return;
 		}
-		
-		if(primaryGen.size() == 0) {
-			for(int i = 0; i < 7; i++) {
+
+		if (primaryGen.size() == 0) {
+			for (int i = 0; i < 7; i++) {
 				primaryGen.add(secondaryGen.get(i));
 			}
 			secondaryGen = new7Bag();
@@ -64,17 +75,18 @@ public class Board implements Runnable {
 				return temp;
 			}
 			random = (int) (Math.random() * 7);
-			if(basicCheck.get(random)) {
+			if (basicCheck.get(random)) {
 				temp.add(random);
 				basicCheck.set(random, false);
 			}
-			
+
 		}
 
 	}
 
 	private static void newPiece() {
 		int piece = primaryGen.get(0);
+		current = piece;
 		primaryGen.remove(0);
 		// I Piece
 		if (piece == 6) {
@@ -146,14 +158,31 @@ public class Board implements Runnable {
 	}
 
 	public static void placeBlocks() {
+		int y;
 		for (int i = moveBlocks.size() - 1; i >= 0; i--) {
-			placedBlocks[(int) moveBlocks.get(i).getY()][(int) moveBlocks.get(i).getX()] = moveBlocks.get(i);
+			y = moveBlocks.get(i).getY();
+			placedBlocks[y][(int) moveBlocks.get(i).getX()] = moveBlocks.get(i);
+			if (checkUnique(y) && lineIsFull(y)) {
+				lineRemoval.add(y);
+			}
 			moveBlocks.remove(i);
-
+		}
+		if (!lineRemoval.isEmpty()) {
+			removeLines();
 		}
 		checkFail();
 		generatePieces();
 		newPiece();
+		heldMove = false;
+	}
+
+	private static boolean checkUnique(int i) {
+		for (int b : lineRemoval) {
+			if (b == i) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	public static void moveDown() {
@@ -333,20 +362,41 @@ public class Board implements Runnable {
 		}
 	}
 
-	private static void clearLines(int[] arr) {
-		ArrayList<Integer> remove = new ArrayList<Integer>();
-		for (int i : arr) {
-			if (lineIsFull(i)) {
-				remove.add(i);
+	private static void removeLines() {
+		// 21 is the bottom of the screen, 1 is the top
+		lineRemoval.sort(null);
+		for (int i : lineRemoval) {
+			for (int x = 0; x < 10; x++) {
+				placedBlocks[i][x] = null;
+			}
+
+			for (int y = i; y >= 2; y--) {
+				for (int x = 0; x < 10; x++) {
+					placedBlocks[y][x] = placedBlocks[y - 1][x];
+					if (placedBlocks[y - 1][x] != null) {
+						placedBlocks[y][x].changeY(placedBlocks[y][x].getY() + 1);
+					}
+					placedBlocks[y - 1][x] = null;
+				}
 			}
 		}
-
-		if (remove.size() == 0) {
-			return;
+		int c = lineRemoval.size();
+		switch(c) {
+		case 1:
+			linesCleared += 1;
+			break;
+		case 2:
+			linesCleared += 3;
+			break;
+		case 3:
+			linesCleared += 5;
+			break;
+		case 4:
+			linesCleared += 8;
+			break;
 		}
-
-		for (int r : remove) {
-
+		for (int i = 0; i < c; i++) {
+			lineRemoval.remove(0);
 		}
 	}
 
@@ -373,10 +423,33 @@ public class Board implements Runnable {
 		}
 		return true;
 	}
-	
+
+	public static void holdBlock() {
+		if (heldMove) {
+			return;
+		}
+
+		if (heldBlock != -1) {
+			primaryGen.add(0, heldBlock);
+			for (int i = 3; i >= 0; i--) {
+				moveBlocks.remove(i);
+			}
+			heldBlock = current;
+			newPiece();
+			heldMove = true;
+			return;
+		}
+		heldBlock = current;
+		for (int i = 3; i >= 0; i--) {
+			moveBlocks.remove(i);
+		}
+		newPiece();
+		heldMove = true;
+	}
+
 	public static void hardDrop() {
-		while(true) {
-			if(checkForCollision(0, 0, 1)) {
+		while (true) {
+			if (checkForCollision(0, 0, 1)) {
 				moveDown();
 			} else {
 				placeBlocks();
@@ -490,7 +563,6 @@ public class Board implements Runnable {
 		}
 		return -1;
 	}
-	
 
 	private static int wallKickCheck() {
 		// Check 0 (Default Check)

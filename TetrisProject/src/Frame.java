@@ -28,6 +28,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	private boolean spaceHeld = false;
 	private boolean moveDown = false;
 	private boolean contacting = false;
+	private boolean hold = false;
 	private int frameNum = 0;
 	private int downCnt = 0;
 	private int leftCnt = 0, rightCnt = 0;
@@ -119,7 +120,6 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 					if (contacting) {
 						lock++;
 						if (Board.checkForCollision(0, 0, 1)) {
-							System.out.println("Off the bottom");
 							contacting = false;
 						}
 					} else {
@@ -204,6 +204,13 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 			downCnt = 0;
 			moveDown = true;
 			break;
+			
+		case 67: //Holding
+			if(!hold) {
+				Board.holdBlock();
+				hold = true;
+			}
+			break;
 		}
 
 	}
@@ -226,6 +233,9 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 			break;
 		case 40:
 			moveDown = false;
+			break;
+		case 67:
+			hold = false;
 			break;
 		}
 	}
