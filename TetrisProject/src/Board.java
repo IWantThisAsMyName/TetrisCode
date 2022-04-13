@@ -7,7 +7,6 @@ public class Board implements Runnable {
 	private static int current;
 	private static int level;
 	private static int rotateState;
-	private static int score;
 	private static int linesCleared;
 	private static boolean heldMove;
 	// First number is X, second is Y
@@ -32,7 +31,6 @@ public class Board implements Runnable {
 		secondaryGen = new ArrayList<Integer>();
 		basicCheck = new ArrayList<Boolean>();
 		lineRemoval = new ArrayList<Integer>();
-		score = 0;
 		linesCleared = 0;
 		heldBlock = -1;
 		heldMove = false;
@@ -226,7 +224,7 @@ public class Board implements Runnable {
 
 	public static void rotatePiece(ArrayList<Block> blocks) {
 		int centerCnt;
-		int x, y, mod;
+		int x, y;
 		Block center = null;
 		rotateState++;
 		if (rotateState == 4) {
@@ -389,19 +387,19 @@ public class Board implements Runnable {
 		switch(c) {
 		case 1:
 			linesCleared += 1;
-			score += 100 * (level + 1);
+			Frame.addPoints(100 * (level - 1));
 			break;
 		case 2:
 			linesCleared += 2;
-			score += 300 * (level + 1);
+			Frame.addPoints(300 * (level - 1));
 			break;
 		case 3:
 			linesCleared += 3;
-			score += 500 * (level + 1);
+			Frame.addPoints(500 * (level - 1));
 			break;
 		case 4:
 			linesCleared += 4;
-			score += 800 * (level + 1);
+			Frame.addPoints(800 * (level - 1));
 			break;
 		}
 		for (int i = 0; i < c; i++) {
@@ -461,7 +459,7 @@ public class Board implements Runnable {
 		while (true) {
 			if (checkForCollision(0, 0, 1)) {
 				moveDown();
-				score += 2;
+				Frame.addPoints(2);
 			} else {
 				placeBlocks();
 				return;
@@ -469,9 +467,6 @@ public class Board implements Runnable {
 		}
 	}
 	
-	public static void addPoints(int points) {
-		score += points;
-	}
 
 	private static boolean lineIsFull(int index) {
 		for (int i = 0; i < 10; i++) {

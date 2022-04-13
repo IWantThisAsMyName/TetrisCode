@@ -17,6 +17,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	Thread rotateThread;
 
 	public static void main(String[] args) {
+		@SuppressWarnings("unused")
 		Frame f = new Frame();
 	}
 
@@ -30,6 +31,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	private boolean contacting = false;
 	private boolean pause = true;
 	private boolean hold = false;
+	private static int score;
 	private int frameNum = 0;
 	private int downCnt = 0;
 	private int leftCnt = 0, rightCnt = 0;
@@ -55,6 +57,10 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 			e.printStackTrace();
 		}
 	}
+	
+	public static void addPoints(int points) {
+		score += points;
+	}
 
 	public void run() {
 		while (true) {
@@ -71,7 +77,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 				downCnt++;
 				if (downCnt >= 2) {
 					Board.moveDown();
-					Board.addPoints(1);
+					score += 1;
 					downCnt = 0;
 				}
 			} else if (frameNum >= levelSpeed[Board.level()]) {
@@ -106,6 +112,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	}
 
 	public Frame() {
+		score = 0;
 		Board board = new Board(0);
 		rotateThread = new Thread(board);
 		rotateThread.start();
