@@ -497,6 +497,16 @@ public class Board implements Runnable {
 	}
 
 	private static ArrayList<Block> rotateCheck = new ArrayList<Block>();
+	
+	private static boolean run = true;
+	
+	public static void pause() {
+		if(run) {
+			run = false;
+			return;
+		}
+		run = true;
+	}
 
 	public void run() {
 		int r;
@@ -505,6 +515,14 @@ public class Board implements Runnable {
 		rotateCheck.add(null);
 		rotateCheck.add(null);
 		while (true) {
+			while(!run) {
+				try {
+					Thread.sleep(16, 666667);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 			if (rotate) {
 				copy();
 				if (moveBlocks.get(0).line()) {

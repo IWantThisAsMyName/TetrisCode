@@ -28,6 +28,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	private boolean spaceHeld = false;
 	private boolean moveDown = false;
 	private boolean contacting = false;
+	private boolean pause = true;
 	private boolean hold = false;
 	private int frameNum = 0;
 	private int downCnt = 0;
@@ -57,6 +58,14 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 
 	public void run() {
 		while (true) {
+			while(!pause) {
+				try {
+					Thread.sleep(16, 666667);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 			frameNum++;
 			if (moveDown && Board.level() <= 18) {
 				downCnt++;
@@ -106,7 +115,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		f.add(this);
 		f.setResizable(false);
 		f.setLayout(new GridLayout(1, 1));
-		f.addMouseListener(this);
+		f.addMouseListener(this);	
 		f.addKeyListener(this);
 		Timer t = new Timer(0, this);
 		Thread b = new Thread(this);
@@ -118,6 +127,14 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		Thread lockDelay = new Thread(new Runnable() {
 			public void run() {
 				while (true) {
+					while(!pause) {
+						try {
+							Thread.sleep(16, 666667);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
 					if (contacting) {
 						lock++;
 						if (Board.checkForCollision(0, 0, 1)) {
@@ -174,7 +191,9 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		// TODO Auto-generated method stub
 		repaint();
 	}
-
+	
+	private boolean held3 = false;
+	
 	@Override
 	public void keyPressed(KeyEvent arg0) {
 		// TODO Auto-generated method stub
@@ -196,8 +215,10 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 
 		case 38: // rotate, up key
 			if (!held) {
-				Board.rotate();
-				held = true;
+				if(pause) {
+					Board.rotate();
+					held = true;
+				}
 			}
 			break;
 
@@ -212,7 +233,20 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 				hold = true;
 			}
 			break;
+		case 27:
+			if(!held3) {
+				held3 = true;
+				if(pause) {
+					pause = false;
+					Board.pause();
+				} else {
+					pause  = true;
+					Board.pause();
+				}
+			}
+			break;
 		}
+		
 
 	}
 
@@ -237,6 +271,9 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 			break;
 		case 67:
 			hold = false;
+			break;
+		case 27:
+			held3 = false;
 			break;
 		}
 	}
