@@ -9,6 +9,7 @@ public class Board implements Runnable {
 	private static int rotateState;
 	private static int linesCleared;
 	private static boolean heldMove;
+	private static boolean tetris;
 	// First number is X, second is Y
 	// For a clockwise check multiply values by -1
 	private static final int normalWallKick[][][] = {
@@ -34,6 +35,7 @@ public class Board implements Runnable {
 		linesCleared = 0;
 		heldBlock = -1;
 		heldMove = false;
+		tetris = false;
 		for (int i = 0; i < 7; i++) {
 			basicCheck.add(true);
 		}
@@ -388,18 +390,26 @@ public class Board implements Runnable {
 		case 1:
 			linesCleared += 1;
 			Frame.addPoints(100 * (level - 1));
+			tetris = false;
 			break;
 		case 2:
 			linesCleared += 2;
 			Frame.addPoints(300 * (level - 1));
+			tetris = false;
 			break;
 		case 3:
 			linesCleared += 3;
 			Frame.addPoints(500 * (level - 1));
+			tetris = false;
 			break;
 		case 4:
 			linesCleared += 4;
-			Frame.addPoints(800 * (level - 1));
+			if(tetris) {
+				Frame.addPoints(1200 * (level - 1));
+			} else {
+				Frame.addPoints(800 * (level - 1));
+				tetris = true;
+			}
 			break;
 		}
 		for (int i = 0; i < c; i++) {
