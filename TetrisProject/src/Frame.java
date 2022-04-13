@@ -38,6 +38,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	private static int lock = 0;
 
 	public void paint(Graphics g) {
+		g.drawString(score + "", 10, 10);
 		g.fillRect(-10, -10, 500, 900);
 		for (Block[] arr : Board.getBlocks()) {
 			for (Block b : arr) {
