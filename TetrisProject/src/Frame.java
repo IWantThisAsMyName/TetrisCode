@@ -62,6 +62,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 				downCnt++;
 				if (downCnt >= 2) {
 					Board.moveDown();
+					Board.addPoints(1);
 					downCnt = 0;
 				}
 			} else if (frameNum >= levelSpeed[Board.level()]) {

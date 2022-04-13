@@ -389,15 +389,19 @@ public class Board implements Runnable {
 		switch(c) {
 		case 1:
 			linesCleared += 1;
+			score += 100 * (level + 1);
 			break;
 		case 2:
 			linesCleared += 3;
+			score += 300 * (level + 1);
 			break;
 		case 3:
 			linesCleared += 5;
+			score += 500 * (level + 1);
 			break;
 		case 4:
 			linesCleared += 8;
+			score += 800 * (level + 1);
 			break;
 		}
 		for (int i = 0; i < c; i++) {
@@ -457,11 +461,16 @@ public class Board implements Runnable {
 		while (true) {
 			if (checkForCollision(0, 0, 1)) {
 				moveDown();
+				score += 2;
 			} else {
 				placeBlocks();
 				return;
 			}
 		}
+	}
+	
+	public static void addPoints(int points) {
+		score += points;
 	}
 
 	private static boolean lineIsFull(int index) {
