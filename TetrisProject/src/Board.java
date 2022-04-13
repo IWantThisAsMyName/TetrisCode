@@ -175,6 +175,11 @@ public class Board implements Runnable {
 		newPiece();
 		heldMove = false;
 	}
+	
+	private static void updateLevel() {
+		level = linesCleared/10;
+		System.out.println(level);
+	}
 
 	private static boolean checkUnique(int i) {
 		for (int b : lineRemoval) {
@@ -398,6 +403,7 @@ public class Board implements Runnable {
 		for (int i = 0; i < c; i++) {
 			lineRemoval.remove(0);
 		}
+		updateLevel();
 	}
 
 	public static boolean checkForCollision(int xR, int xL, int y) {
