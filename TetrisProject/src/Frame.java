@@ -102,7 +102,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		rotateThread.start();
 		Board.start();
 		JFrame f = new JFrame("Tetris");
-		f.setSize(new Dimension(405, 880));
+		f.setSize(new Dimension(415, 880));
 		f.add(this);
 		f.setResizable(false);
 		f.setLayout(new GridLayout(1, 1));

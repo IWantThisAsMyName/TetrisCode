@@ -392,15 +392,15 @@ public class Board implements Runnable {
 			score += 100 * (level + 1);
 			break;
 		case 2:
-			linesCleared += 3;
+			linesCleared += 2;
 			score += 300 * (level + 1);
 			break;
 		case 3:
-			linesCleared += 5;
+			linesCleared += 3;
 			score += 500 * (level + 1);
 			break;
 		case 4:
-			linesCleared += 8;
+			linesCleared += 4;
 			score += 800 * (level + 1);
 			break;
 		}
