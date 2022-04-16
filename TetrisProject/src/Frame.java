@@ -1,4 +1,6 @@
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -7,6 +9,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -14,7 +17,7 @@ import javax.swing.Timer;
 
 @SuppressWarnings("serial")
 public class Frame extends JPanel implements ActionListener, MouseListener, KeyListener, Runnable {
-	Thread rotateThread;
+	static Thread rotateThread;
 
 	public static void main(String[] args) {
 		@SuppressWarnings("unused")
@@ -31,25 +34,49 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	private boolean contacting = false;
 	private boolean pause = true;
 	private boolean hold = false;
+	private boolean held3 = false;
+	private static int state;
+	private static Board board;
 	private static int score;
 	private int frameNum = 0;
 	private int downCnt = 0;
 	private int leftCnt = 0, rightCnt = 0;
 	private static int lock = 0;
+	private static int[] nextBlocks;
 
 	public void paint(Graphics g) {
-		g.drawString(score + "", 10, 10);
-		g.fillRect(-10, -10, 500, 900);
-		for (Block[] arr : Board.getBlocks()) {
-			for (Block b : arr) {
-				try {
-					b.paint(g);
-				} catch (Exception e) {
+		if(state == 0) {
+			
+		}
+		if (state == 1 || state == 2) {
+			g.drawString(score + "", 10, 10);
+			g.fillRect(-10, -10, 500, 900);
+			for (Block[] arr : board.getBlocks()) {
+				for (Block b : arr) {
+					try {
+						b.paint(g);
+					} catch (Exception e) {
+					}
 				}
 			}
-		}
-		for (Block b : Board.getMoveBlocks()) {
-			b.paint(g);
+			for (Block b : board.getMoveBlocks()) {
+				b.paint(g);
+			}
+			// Draws the pause menu
+			if (!pause) {
+				g.setColor(Color.gray);
+				g.fillRect(75, 200, 250, 400);
+				g.setColor(Color.black);
+				g.setFont(new Font("Test", 0, 30));
+				g.drawString("Game Paused", 110, 250);
+			}
+			if(state == 2) {
+				g.setColor(Color.gray);
+				g.fillRect(75, 200, 250, 400);
+				g.setColor(Color.black);
+				g.setFont(new Font("Test", 0, 30));
+				g.drawString("Game Over", 110, 250);
+			}
 		}
 		try {
 			Thread.sleep(16, 666667);
@@ -58,14 +85,30 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static void addPoints(int points) {
 		score += points;
 	}
 
+	public static void updateNextBlocks(ArrayList<Integer> gen1, ArrayList<Integer> gen2) {
+		for (int i = 0; i < 6; i++) {
+			try {
+				nextBlocks[i] = gen1.get(i);
+				System.out.print(nextBlocks[i] + " ");
+			} catch (Exception e) {
+				for (int x = 0; x < 6 - i; x++) {
+					nextBlocks[x + i] = gen2.get(x);
+					System.out.print(nextBlocks[x + i] + " ");
+				}
+				i = 7;
+			}
+		}
+		System.out.println();
+	}
+
 	public void run() {
 		while (true) {
-			while(!pause) {
+			while (!pause) {
 				try {
 					Thread.sleep(16, 666667);
 				} catch (InterruptedException e) {
@@ -74,32 +117,32 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 				}
 			}
 			frameNum++;
-			if (moveDown && Board.level() <= 18) {
+			if (moveDown && board.level() <= 18) {
 				downCnt++;
 				if (downCnt >= 2) {
-					Board.moveDown();
+					board.moveDown();
 					score += 1;
 					downCnt = 0;
 				}
-			} else if (frameNum >= levelSpeed[Board.level()]) {
-				if (!Board.checkForCollision(0, 0, 1)) {
+			} else if (frameNum >= levelSpeed[board.level()]) {
+				if (!board.checkForCollision(0, 0, 1)) {
 					contacting = true;
 				} else {
-					Board.moveDown();
+					board.moveDown();
 				}
 				frameNum = 0;
 			}
 			if (moveRight) {
 				rightCnt++;
 				if (rightCnt >= 5) {
-					Board.moveSide(true);
+					board.moveSide(true);
 					rightCnt = 0;
 				}
 			}
 			if (moveLeft) {
 				leftCnt++;
 				if (leftCnt >= 5) {
-					Board.moveSide(false);
+					board.moveSide(false);
 					leftCnt = 0;
 				}
 			}
@@ -113,17 +156,15 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	}
 
 	public Frame() {
+		state = 1;
 		score = 0;
-		Board board = new Board(0);
-		rotateThread = new Thread(board);
-		rotateThread.start();
-		Board.start();
+		startGame();
 		JFrame f = new JFrame("Tetris");
-		f.setSize(new Dimension(415, 880));
+		f.setSize(new Dimension(415, 840));
 		f.add(this);
 		f.setResizable(false);
 		f.setLayout(new GridLayout(1, 1));
-		f.addMouseListener(this);	
+		f.addMouseListener(this);
 		f.addKeyListener(this);
 		Timer t = new Timer(0, this);
 		Thread b = new Thread(this);
@@ -131,11 +172,12 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		t.start();
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setVisible(true);
+		nextBlocks = new int[6];
 
 		Thread lockDelay = new Thread(new Runnable() {
 			public void run() {
 				while (true) {
-					while(!pause) {
+					while (!pause) {
 						try {
 							Thread.sleep(16, 666667);
 						} catch (InterruptedException e) {
@@ -145,14 +187,14 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 					}
 					if (contacting) {
 						lock++;
-						if (Board.checkForCollision(0, 0, 1)) {
+						if (board.checkForCollision(0, 0, 1)) {
 							contacting = false;
 						}
 					} else {
 						lock = 0;
 					}
 					if (lock >= 30) {
-						Board.placeBlocks();
+						board.placeBlocks();
 						contacting = false;
 					}
 					try {
@@ -199,32 +241,36 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		// TODO Auto-generated method stub
 		repaint();
 	}
-	
-	private boolean held3 = false;
-	
+
 	@Override
 	public void keyPressed(KeyEvent arg0) {
 		// TODO Auto-generated method stub
 		switch (arg0.getKeyCode()) {
 		case 39: // right
+			if (!moveRight) {
+				rightCnt = 5;
+			}
 			moveRight = true;
 			break;
 
 		case 37: // left
+			if (!moveLeft) {
+				leftCnt = 5;
+			}
 			moveLeft = true;
 			break;
 
 		case 32: // instant drop, space bar
-			if(!spaceHeld) {
-				Board.hardDrop();
+			if (!spaceHeld) {
+				board.hardDrop();
 				spaceHeld = true;
 			}
 			break;
 
 		case 38: // rotate, up key
 			if (!held) {
-				if(pause) {
-					Board.rotate();
+				if (pause) {
+					board.rotate();
 					held = true;
 				}
 			}
@@ -234,27 +280,26 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 			downCnt = 0;
 			moveDown = true;
 			break;
-			
-		case 67: //Holding
-			if(!hold) {
-				Board.holdBlock();
+
+		case 67: // Holding
+			if (!hold) {
+				board.holdBlock();
 				hold = true;
 			}
 			break;
 		case 27:
-			if(!held3) {
+			if (!held3) {
 				held3 = true;
-				if(pause) {
+				if (pause) {
 					pause = false;
-					Board.pause();
+					board.pause();
 				} else {
-					pause  = true;
-					Board.pause();
+					pause = true;
+					board.pause();
 				}
 			}
 			break;
 		}
-		
 
 	}
 
@@ -290,6 +335,17 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	public void keyTyped(KeyEvent arg0) {
 		// TODO Auto-generated method stub
 
+	}
+
+	private static void startGame() {
+		board = new Board(0);
+		rotateThread = new Thread(board);
+		rotateThread.start();
+	}
+
+	public static void endGame() {
+		System.out.println("Game Over");
+		state = 2;
 	}
 
 }

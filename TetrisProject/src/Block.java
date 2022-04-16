@@ -13,7 +13,7 @@ public class Block {
 
 	public Block(int color, int x, int y, boolean rotateCenter) {
 		this.x = x;
-		this.y = y;
+		this.y = y + 1;
 		this.rotateCenter = rotateCenter;
 		switch (color) {
 		case 0:
@@ -42,7 +42,7 @@ public class Block {
 	
 	public Block(int color, int x, int y, boolean rotateCenter, boolean line) {
 		this.x = x;
-		this.y = y;
+		this.y = y + 1;
 		this.rotateCenter = rotateCenter;
 		this.line = line;
 		switch (color) {
@@ -119,7 +119,7 @@ public class Block {
 	public void paint(Graphics g) {
 		Graphics2D g2D = (Graphics2D) g;
 		if(y >= 0) {
-			g2D.drawImage(image, x * 40, (y - 2) * 40, 40, 40, null);
+			g2D.drawImage(image, x * 40, (y - 3) * 40, 40, 40, null);
 		}
 	}
 
