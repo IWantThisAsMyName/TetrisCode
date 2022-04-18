@@ -113,6 +113,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 					e.printStackTrace();
 				}
 			}
+			
 			frameNum++;
 			if (moveDown && board.level() <= 18) {
 				downCnt++;
@@ -121,7 +122,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 					score += 1;
 					downCnt = 0;
 				}
-			} else if (frameNum >= levelSpeed[board.level()]) {
+			} else if (frameNum >= levelSpeed[board.level()] && !end) {
 				if (!board.checkForCollision(0, 0, 1)) {
 					contacting = true;
 				} else {
@@ -170,11 +171,20 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setVisible(true);
 		nextBlocks = new int[6];
+		end = false;
 
 		Thread lockDelay = new Thread(new Runnable() {
 			public void run() {
 				while (true) {
 					while (!pause) {
+						try {
+							Thread.sleep(16, 666667);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+					while (end) {
 						try {
 							Thread.sleep(16, 666667);
 						} catch (InterruptedException e) {
@@ -339,10 +349,12 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		rotateThread = new Thread(board);
 		rotateThread.start();
 	}
-
+	
+	private boolean end;
+	
 	public static void endGame() {
-		board = new Board(0);
 		state = 2;
+		board = new Board(0);
 	}
 
 }
