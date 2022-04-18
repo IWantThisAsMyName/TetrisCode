@@ -165,7 +165,7 @@ public class Board implements Runnable {
 		for (int i = moveBlocks.size() - 1; i >= 0; i--) {
 			y = moveBlocks.get(i).getY();
 			placedBlocks[y][(int) moveBlocks.get(i).getX()] = moveBlocks.get(i);
-			if (y > 1) {
+			if (y > 2) {
 				above = false;
 			}
 			if (checkUnique(y) && lineIsFull(y)) {
@@ -470,6 +470,7 @@ public class Board implements Runnable {
 		for (int i = 3; i >= 0; i--) {
 			moveBlocks.remove(i);
 		}
+		generatePieces();
 		newPiece();
 		heldMove = true;
 	}
@@ -507,6 +508,7 @@ public class Board implements Runnable {
 
 	public  void rotate() {
 		rotate = true;
+		System.out.println(rotate);
 	}
 
 	private  ArrayList<Block> rotateCheck = new ArrayList<Block>();
@@ -523,6 +525,7 @@ public class Board implements Runnable {
 
 	public void run() {
 		int r;
+		System.out.println("Initilizing");
 		rotateCheck.add(null);
 		rotateCheck.add(null);
 		rotateCheck.add(null);
@@ -555,7 +558,7 @@ public class Board implements Runnable {
 				rotate = false;
 			}
 			try {
-				Thread.sleep(1);
+				Thread.sleep(16, 666667);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

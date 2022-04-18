@@ -94,16 +94,13 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		for (int i = 0; i < 6; i++) {
 			try {
 				nextBlocks[i] = gen1.get(i);
-				System.out.print(nextBlocks[i] + " ");
 			} catch (Exception e) {
 				for (int x = 0; x < 6 - i; x++) {
 					nextBlocks[x + i] = gen2.get(x);
-					System.out.print(nextBlocks[x + i] + " ");
 				}
 				i = 7;
 			}
 		}
-		System.out.println();
 	}
 
 	public void run() {
@@ -344,8 +341,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	}
 
 	public static void endGame() {
-		System.out.println("Game Over");
-		state = 2;
+		board = new Board(0);
 	}
 
 }
