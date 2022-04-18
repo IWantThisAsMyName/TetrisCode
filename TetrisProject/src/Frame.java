@@ -95,16 +95,13 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		for (int i = 0; i < 6; i++) {
 			try {
 				nextBlocks[i] = gen1.get(i);
-				System.out.print(nextBlocks[i] + " ");
 			} catch (Exception e) {
 				for (int x = 0; x < 6 - i; x++) {
 					nextBlocks[x + i] = gen2.get(x);
-					System.out.print(nextBlocks[x + i] + " ");
 				}
 				i = 7;
 			}
 		}
-		System.out.println();
 	}
 
 	public void run() {
@@ -117,6 +114,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 					e.printStackTrace();
 				}
 			}
+			
 			frameNum++;
 			if (moveDown && board.level() <= 18) {
 				downCnt++;
@@ -125,7 +123,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 					score += 1;
 					downCnt = 0;
 				}
-			} else if (frameNum >= levelSpeed[board.level()]) {
+			} else if (frameNum >= levelSpeed[board.level()] && !end) {
 				if (!board.checkForCollision(0, 0, 1)) {
 					contacting = true;
 				} else {
@@ -174,11 +172,20 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setVisible(true);
 		nextBlocks = new int[6];
+		end = false;
 
 		Thread lockDelay = new Thread(new Runnable() {
 			public void run() {
 				while (true) {
 					while (!pause) {
+						try {
+							Thread.sleep(16, 666667);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+					while (end) {
 						try {
 							Thread.sleep(16, 666667);
 						} catch (InterruptedException e) {
@@ -343,10 +350,12 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		rotateThread = new Thread(board);
 		rotateThread.start();
 	}
-
+	
+	private boolean end;
+	
 	public static void endGame() {
-		System.out.println("Game Over");
 		state = 2;
+		board = new Board(0);
 	}
 
 }

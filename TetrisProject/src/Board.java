@@ -39,6 +39,7 @@ public class Board implements Runnable {
 		heldBlock = -1;
 		heldMove = false;
 		tetris = false;
+		end = false;
 		for (int i = 0; i < 7; i++) {
 			basicCheck.add(true);
 		}
@@ -184,13 +185,11 @@ public class Board implements Runnable {
 		generatePieces();
 		newPiece();
 		Frame.updateNextBlocks(primaryGen, secondaryGen);
-		System.out.println(primaryGen.size());
 		heldMove = false;
 	}
 
 	private  void updateLevel() {
 		level = initLevel + linesCleared / 10;
-		System.out.println(level);
 	}
 
 	private  boolean checkUnique(int i) {
@@ -470,6 +469,7 @@ public class Board implements Runnable {
 		for (int i = 3; i >= 0; i--) {
 			moveBlocks.remove(i);
 		}
+		generatePieces();
 		newPiece();
 		heldMove = true;
 	}
@@ -536,6 +536,14 @@ public class Board implements Runnable {
 					e.printStackTrace();
 				}
 			}
+			while (end) {
+				try {
+					Thread.sleep(16, 666667);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 			if (rotate) {
 				copy();
 				if (moveBlocks.get(0).line()) {
@@ -555,7 +563,7 @@ public class Board implements Runnable {
 				rotate = false;
 			}
 			try {
-				Thread.sleep(1);
+				Thread.sleep(16, 666667);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -621,5 +629,11 @@ public class Board implements Runnable {
 			rotate++;
 		}
 		return -1;
+	}
+	
+	private boolean end;
+	
+	public void end() {
+		end = true;
 	}
 }
