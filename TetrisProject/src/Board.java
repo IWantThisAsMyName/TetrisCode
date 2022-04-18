@@ -184,13 +184,11 @@ public class Board implements Runnable {
 		generatePieces();
 		newPiece();
 		Frame.updateNextBlocks(primaryGen, secondaryGen);
-		System.out.println(primaryGen.size());
 		heldMove = false;
 	}
 
 	private  void updateLevel() {
 		level = initLevel + linesCleared / 10;
-		System.out.println(level);
 	}
 
 	private  boolean checkUnique(int i) {
@@ -508,7 +506,6 @@ public class Board implements Runnable {
 
 	public  void rotate() {
 		rotate = true;
-		System.out.println(rotate);
 	}
 
 	private  ArrayList<Block> rotateCheck = new ArrayList<Block>();
@@ -525,7 +522,6 @@ public class Board implements Runnable {
 
 	public void run() {
 		int r;
-		System.out.println("Initilizing");
 		rotateCheck.add(null);
 		rotateCheck.add(null);
 		rotateCheck.add(null);

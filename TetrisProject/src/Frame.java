@@ -342,6 +342,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 
 	public static void endGame() {
 		board = new Board(0);
+		state = 2;
 	}
 
 }
