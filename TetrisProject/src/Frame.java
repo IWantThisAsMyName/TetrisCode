@@ -41,6 +41,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	private int frameNum = 0;
 	private int downCnt = 0;
 	private int leftCnt = 0, rightCnt = 0;
+	private int dcLeft, dcRight;
 	private static int lock = 0;
 	private static int[] nextBlocks;
 

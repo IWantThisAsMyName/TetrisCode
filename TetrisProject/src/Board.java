@@ -165,7 +165,7 @@ public class Board implements Runnable {
 		for (int i = moveBlocks.size() - 1; i >= 0; i--) {
 			y = moveBlocks.get(i).getY();
 			placedBlocks[y][(int) moveBlocks.get(i).getX()] = moveBlocks.get(i);
-			if (y > 1) {
+			if (y > 2) {
 				above = false;
 			}
 			if (checkUnique(y) && lineIsFull(y)) {
