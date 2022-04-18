@@ -136,18 +136,29 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 					contacting = true;
 				} else {
 					board.moveDown();
+					if (moveDown) {
+						score++;
+					}
 				}
 				frameNum = 0;
 			}
 			if (moveRight) {
-				rightCnt++;
+				if(dcRight > 15) {
+					rightCnt += 3;
+				} else {
+					dcRight++;
+				}
 				if (rightCnt >= 5) {
 					board.moveSide(true);
 					rightCnt = 0;
 				}
 			}
 			if (moveLeft) {
-				leftCnt++;
+				if(dcLeft > 15) {
+					leftCnt += 3;
+				} else {
+					dcLeft++;
+				}
 				if (leftCnt >= 5) {
 					board.moveSide(false);
 					leftCnt = 0;
@@ -277,7 +288,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 
 		case 37: // left
 			if (state == 0) {
-				if(initLevel > 0) {
+				if (initLevel > 0) {
 					initLevel--;
 				}
 			}
@@ -331,7 +342,8 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 			}
 			break;
 		case 10:
-			if(state == 0) startGame();
+			if (state == 0)
+				startGame();
 			break;
 		}
 
@@ -342,9 +354,11 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		// TODO Auto-generated method stub
 		switch (arg0.getKeyCode()) {
 		case 39:
+			dcRight = 0;
 			moveRight = false;
 			break;
 		case 37:
+			dcLeft = 0;
 			moveLeft = false;
 			break;
 		case 32:
