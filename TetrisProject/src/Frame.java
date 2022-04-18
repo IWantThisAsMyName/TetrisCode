@@ -18,6 +18,8 @@ import javax.swing.Timer;
 @SuppressWarnings("serial")
 public class Frame extends JPanel implements ActionListener, MouseListener, KeyListener, Runnable {
 	static Thread rotateThread;
+	static Thread lockDelay;
+	static Thread move;
 
 	public static void main(String[] args) {
 		@SuppressWarnings("unused")
@@ -42,12 +44,14 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	private int downCnt = 0;
 	private int leftCnt = 0, rightCnt = 0;
 	private int dcLeft, dcRight;
+	private static int initLevel;
 	private static int lock = 0;
 	private static int[] nextBlocks;
 
 	public void paint(Graphics g) {
-		if(state == 0) {
-			
+		if (state == 0) {
+			g.setColor(Color.blue);
+			g.drawString("Tetris", 200, 200);
 		}
 		if (state == 1 || state == 2) {
 			g.drawString(score + "", 10, 10);
@@ -71,7 +75,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 				g.setFont(new Font("Test", 0, 30));
 				g.drawString("Game Paused", 110, 250);
 			}
-			if(state == 2) {
+			if (state == 2) {
 				g.setColor(Color.gray);
 				g.fillRect(75, 200, 250, 400);
 				g.setColor(Color.black);
@@ -114,12 +118,16 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 					e.printStackTrace();
 				}
 			}
-			
+
 			frameNum++;
 			if (moveDown && board.level() <= 18) {
 				downCnt++;
 				if (downCnt >= 2) {
-					board.moveDown();
+					if (!board.checkForCollision(0, 0, 1)) {
+						contacting = true;
+					} else {
+						board.moveDown();
+					}
 					score += 1;
 					downCnt = 0;
 				}
@@ -155,9 +163,9 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	}
 
 	public Frame() {
-		state = 1;
+		state = 0;
 		score = 0;
-		startGame();
+		initLevel = 0;
 		JFrame f = new JFrame("Tetris");
 		f.setSize(new Dimension(415, 840));
 		f.add(this);
@@ -166,15 +174,14 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		f.addMouseListener(this);
 		f.addKeyListener(this);
 		Timer t = new Timer(0, this);
-		Thread b = new Thread(this);
-		b.start();
+		move = new Thread(this);
 		t.start();
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setVisible(true);
 		nextBlocks = new int[6];
 		end = false;
 
-		Thread lockDelay = new Thread(new Runnable() {
+		lockDelay = new Thread(new Runnable() {
 			public void run() {
 				while (true) {
 					while (!pause) {
@@ -214,7 +221,6 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 				}
 			}
 		});
-		lockDelay.start();
 
 	}
 
@@ -253,30 +259,45 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	@Override
 	public void keyPressed(KeyEvent arg0) {
 		// TODO Auto-generated method stub
+		System.out.println(arg0.getKeyCode());
 		switch (arg0.getKeyCode()) {
 		case 39: // right
-			if (!moveRight) {
-				rightCnt = 5;
+			if (state == 0) {
+				if (initLevel < 19) {
+					initLevel++;
+				}
 			}
-			moveRight = true;
+			if (state == 1) {
+				if (!moveRight) {
+					rightCnt = 5;
+				}
+				moveRight = true;
+			}
 			break;
 
 		case 37: // left
-			if (!moveLeft) {
-				leftCnt = 5;
+			if (state == 0) {
+				if(initLevel > 0) {
+					initLevel--;
+				}
 			}
-			moveLeft = true;
+			if (state == 1) {
+				if (!moveLeft) {
+					leftCnt = 5;
+				}
+				moveLeft = true;
+			}
 			break;
 
 		case 32: // instant drop, space bar
-			if (!spaceHeld) {
+			if (!spaceHeld && state == 1) {
 				board.hardDrop();
 				spaceHeld = true;
 			}
 			break;
 
 		case 38: // rotate, up key
-			if (!held) {
+			if (!held && state == 1) {
 				if (pause) {
 					board.rotate();
 					held = true;
@@ -285,18 +306,20 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 			break;
 
 		case 40: // soft drop, down key
-			downCnt = 0;
-			moveDown = true;
+			if (state == 1) {
+				downCnt = 0;
+				moveDown = true;
+			}
 			break;
 
 		case 67: // Holding
-			if (!hold) {
+			if (!hold && state == 1) {
 				board.holdBlock();
 				hold = true;
 			}
 			break;
 		case 27:
-			if (!held3) {
+			if (!held3 && state == 1) {
 				held3 = true;
 				if (pause) {
 					pause = false;
@@ -306,6 +329,9 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 					board.pause();
 				}
 			}
+			break;
+		case 10:
+			if(state == 0) startGame();
 			break;
 		}
 
@@ -346,16 +372,20 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	}
 
 	private static void startGame() {
-		board = new Board(0);
+		state = 1;
+		end = false;
+		board = new Board(initLevel);
 		rotateThread = new Thread(board);
 		rotateThread.start();
+		lockDelay.start();
+		move.start();
 	}
-	
-	private boolean end;
-	
+
+	private static boolean end;
+
 	public static void endGame() {
 		state = 2;
-		board = new Board(0);
+		end = true;
 	}
 
 }
