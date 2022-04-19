@@ -189,7 +189,11 @@ public class Board implements Runnable {
 	}
 
 	private void updateLevel() {
-		level = initLevel + linesCleared / 10;
+		if(linesCleared/10 >= initLevel) {
+			level = linesCleared/10;
+			return;
+		}
+		level = initLevel;
 	}
 
 	private boolean checkUnique(int i) {

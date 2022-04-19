@@ -3,6 +3,8 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.MouseInfo;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -37,6 +39,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	private boolean pause = true;
 	private boolean hold = false;
 	private boolean held3 = false;
+	private Point mouseXY;
 	private static int state;
 	private static Board board;
 	private static int score;
@@ -234,6 +237,17 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 				}
 			}
 		});
+		
+		
+		Thread mouseTrack = new Thread(new Runnable(){
+			public void run() {
+				while(true) {
+					mouseXY = MouseInfo.getPointerInfo().getLocation();
+					
+				}
+			}
+		});
+			
 
 	}
 
