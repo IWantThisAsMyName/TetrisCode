@@ -1,31 +1,32 @@
 import java.util.ArrayList;
 
 public class Board implements Runnable {
-	private  Block[][] placedBlocks;
-	private  ArrayList<Block> moveBlocks;
-	private  int heldBlock;
-	private  int current;
-	private  int level;
-	private  int rotateState;
-	private  int linesCleared;
-	private  boolean heldMove;
-	private  boolean tetris;
-	private  int initLevel;
+	private Block[][] placedBlocks;
+	private ArrayList<Block> moveBlocks;
+	private int heldBlock;
+	private int current;
+	private int level;
+	private int rotateState;
+	private int linesCleared;
+	private boolean heldMove;
+	private boolean tetris;
+	private int initLevel;
+	private boolean rotateCclock;
 	// First number is X, second is Y
 	// For a clockwise check multiply values by -1
-	private  final int normalWallKick[][][] = {
+	private final int normalWallKick[][][] = {
 			/* Position 0 -> 1 */ { { 0, 0 }, { 1, 0 }, { 1, -1 }, { 0, 2 }, { 1, 2 } },
 			/* Position 1 -> 2 */ { { 0, 0 }, { -1, 0 }, { 1, -1 }, { 0, -2 }, { -1, -2 } },
 			/* Position 2 -> 3 */ { { 0, 0 }, { -1, 0 }, { -1, -1 }, { 0, 2 }, { -1, 2 } },
 			/* Position 3 -> 0 */ { { 0, 0 }, { 1, 0 }, { 1, 1 }, { 0, -2 }, { 1, -2 } }, };
-	private  final int wallKickIPiece[][][] = { { { 0, 0 }, { 2, 0 }, { -1, 0 }, { 2, 1 }, { -1, -2 } },
+	private final int wallKickIPiece[][][] = { { { 0, 0 }, { 2, 0 }, { -1, 0 }, { 2, 1 }, { -1, -2 } },
 			{ { 0, 0 }, { 1, 0 }, { -2, 0 }, { 1, -2 }, { -2, 1 } },
 			{ { 0, 0 }, { -2, 0 }, { 1, 0 }, { -2, -1 }, { 1, 2 } },
 			{ { 0, 0 }, { -1, 0 }, { 2, 0 }, { -1, 2 }, { 2, -1 } }, };
-	private  ArrayList<Integer> primaryGen;
-	private  ArrayList<Integer> secondaryGen;
-	private  ArrayList<Boolean> basicCheck;
-	private  ArrayList<Integer> lineRemoval;
+	private ArrayList<Integer> primaryGen;
+	private ArrayList<Integer> secondaryGen;
+	private ArrayList<Boolean> basicCheck;
+	private ArrayList<Integer> lineRemoval;
 
 	@SuppressWarnings("static-access")
 	public Board(int level) {
@@ -49,7 +50,7 @@ public class Board implements Runnable {
 		newPiece();
 	}
 
-	private  void generatePieces() {
+	private void generatePieces() {
 		if (primaryGen.isEmpty() && secondaryGen.isEmpty()) {
 			primaryGen = new7Bag();
 			secondaryGen = new7Bag();
@@ -66,8 +67,7 @@ public class Board implements Runnable {
 		return;
 	}
 
-	
-	private  ArrayList<Integer> new7Bag() {
+	private ArrayList<Integer> new7Bag() {
 		ArrayList<Integer> temp = new ArrayList<Integer>();
 		int random;
 		while (true) {
@@ -87,7 +87,7 @@ public class Board implements Runnable {
 
 	}
 
-	private  void newPiece() {
+	private void newPiece() {
 		int piece = primaryGen.get(0);
 		current = piece;
 		primaryGen.remove(0);
@@ -152,15 +152,15 @@ public class Board implements Runnable {
 		moveBlocks.add(new Block(6, 5, 1, false));
 	}
 
-	public  ArrayList<Block> getMoveBlocks() {
+	public ArrayList<Block> getMoveBlocks() {
 		return moveBlocks;
 	}
 
-	public  Block[][] getBlocks() {
+	public Block[][] getBlocks() {
 		return placedBlocks;
 	}
 
-	public  void placeBlocks() {
+	public void placeBlocks() {
 		int y;
 		boolean above = true;
 		for (int i = moveBlocks.size() - 1; i >= 0; i--) {
@@ -188,11 +188,11 @@ public class Board implements Runnable {
 		heldMove = false;
 	}
 
-	private  void updateLevel() {
+	private void updateLevel() {
 		level = initLevel + linesCleared / 10;
 	}
 
-	private  boolean checkUnique(int i) {
+	private boolean checkUnique(int i) {
 		for (int b : lineRemoval) {
 			if (b == i) {
 				return false;
@@ -201,7 +201,7 @@ public class Board implements Runnable {
 		return true;
 	}
 
-	public  void moveDown() {
+	public void moveDown() {
 		if (checkForCollision(0, 0, 1)) {
 			for (Block block : moveBlocks) {
 				block.changeY(block.getY() + 1);
@@ -209,7 +209,7 @@ public class Board implements Runnable {
 		}
 	}
 
-	public  void moveSide(boolean direction) {
+	public void moveSide(boolean direction) {
 		if (direction) {
 			if (checkForCollision(1, 0, 0)) {
 				for (Block block : moveBlocks) {
@@ -226,12 +226,12 @@ public class Board implements Runnable {
 		}
 	}
 
-	private  boolean checkFail() {
+	private boolean checkFail() {
 
 		return false;
 	}
 
-	public  void rotatePiece(ArrayList<Block> blocks) {
+	public void rotatePiece(ArrayList<Block> blocks) {
 		int centerCnt;
 		int x, y;
 		Block center = null;
@@ -375,7 +375,7 @@ public class Board implements Runnable {
 		}
 	}
 
-	private  void removeLines() {
+	private void removeLines() {
 		// 21 is the bottom of the screen, 1 is the top
 		lineRemoval.sort(null);
 		for (int i : lineRemoval) {
@@ -426,7 +426,7 @@ public class Board implements Runnable {
 		updateLevel();
 	}
 
-	public  boolean checkForCollision(int xR, int xL, int y) {
+	public boolean checkForCollision(int xR, int xL, int y) {
 		for (Block block : moveBlocks) {
 			try {
 				if (placedBlocks[block.getY() + y][block.getX() + xR - xL] != null) {
@@ -450,7 +450,7 @@ public class Board implements Runnable {
 		return true;
 	}
 
-	public  void holdBlock() {
+	public void holdBlock() {
 		if (heldMove) {
 			return;
 		}
@@ -474,7 +474,7 @@ public class Board implements Runnable {
 		heldMove = true;
 	}
 
-	public  void hardDrop() {
+	public void hardDrop() {
 		while (true) {
 			if (checkForCollision(0, 0, 1)) {
 				moveDown();
@@ -486,7 +486,7 @@ public class Board implements Runnable {
 		}
 	}
 
-	private  boolean lineIsFull(int index) {
+	private boolean lineIsFull(int index) {
 		for (int i = 0; i < 10; i++) {
 			if (placedBlocks[index][i] == null) {
 				return false;
@@ -495,25 +495,25 @@ public class Board implements Runnable {
 		return true;
 	}
 
-	public  Block getPlacedBlock(int x, int y) {
+	public Block getPlacedBlock(int x, int y) {
 		return placedBlocks[y][x];
 	}
 
-	public  int level() {
+	public int level() {
 		return level;
 	}
 
-	private  boolean rotate;
+	private boolean rotate;
 
-	public  void rotate() {
+	public void rotate() {
 		rotate = true;
 	}
 
-	private  ArrayList<Block> rotateCheck = new ArrayList<Block>();
+	private ArrayList<Block> rotateCheck = new ArrayList<Block>();
 
-	private  boolean run = true;
+	private boolean run = true;
 
-	public  void pause() {
+	public void pause() {
 		if (run) {
 			run = false;
 			return;
@@ -547,15 +547,33 @@ public class Board implements Runnable {
 			if (rotate) {
 				copy();
 				if (moveBlocks.get(0).line()) {
-					r = lineWallKick();
+					r = lineWallKick(1);
 					if (r != -1) {
-						addChanges(wallKickIPiece[rotateState][r]);
+						addChanges(wallKickIPiece[rotateState][r], 1);
 						rotatePiece(moveBlocks);
 					}
 				} else {
-					r = wallKickCheck();
+					r = wallKickCheck(1);
 					if (r != -1) {
-						addChanges(normalWallKick[rotateState][r]);
+						addChanges(normalWallKick[rotateState][r], 1);
+						rotatePiece(moveBlocks);
+					}
+
+				}
+				rotate = false;
+			}
+			if(rotateCclock) {
+				copy();
+				if (moveBlocks.get(0).line()) {
+					r = lineWallKick(-1);
+					if (r != -1) {
+						addChanges(wallKickIPiece[rotateState][r], -1);
+						rotatePiece(moveBlocks);
+					}
+				} else {
+					r = wallKickCheck(-1);
+					if (r != -1) {
+						addChanges(normalWallKick[rotateState][r], -1);
 						rotatePiece(moveBlocks);
 					}
 
@@ -574,7 +592,7 @@ public class Board implements Runnable {
 
 	// True will copy moveBlocks to rotateCheck, false will copy rotateCheck to
 	// moveBlocks
-	private  void copy() {
+	private void copy() {
 		int i = 0;
 		for (Block block : moveBlocks) {
 			rotateCheck.set(i, new Block(block));
@@ -583,10 +601,10 @@ public class Board implements Runnable {
 		return;
 	}
 
-	private  boolean legal(int[] changes) {
+	private boolean legal(int[] changes, int mod) {
 		for (Block b : rotateCheck) {
 			try {
-				if (placedBlocks[b.getY() + changes[1]][b.getX() + changes[0]] != null) {
+				if (placedBlocks[b.getY() + changes[1] * mod][b.getX() + changes[0] * mod] != null) {
 					return false;
 				}
 			} catch (Exception e) {
@@ -596,21 +614,21 @@ public class Board implements Runnable {
 		return true;
 	}
 
-	private  void addChanges(int[] changes) {
+	private void addChanges(int[] changes, int mod) {
 		for (Block b : moveBlocks) {
-			b.changeX(b.getX() + changes[0]);
-			b.changeY(b.getY() + changes[1]);
+			b.changeX(b.getX() + changes[0] * mod);
+			b.changeY(b.getY() + changes[1] * mod);
 		}
 	}
 
-	private  boolean subtract;
+	private boolean subtract;
 
-	private  int lineWallKick() {
+	private int lineWallKick(int mod) {
 		int rotate = 0;
 		subtract = true;
 		rotatePiece(rotateCheck);
 		for (int i = 0; i < 5; i++) {
-			if (legal(wallKickIPiece[rotateState][i])) {
+			if (legal(wallKickIPiece[rotateState][i], mod)) {
 				return rotate;
 			}
 			rotate++;
@@ -618,21 +636,25 @@ public class Board implements Runnable {
 		return -1;
 	}
 
-	private  int wallKickCheck() {
+	private int wallKickCheck(int mod) {
 		// Check 0 (Default Check)
 		int rotate = 0;
 		rotatePiece(rotateCheck);
 		for (int i = 0; i < 5; i++) {
-			if (legal(normalWallKick[rotateState][i])) {
+			if (legal(normalWallKick[rotateState][i], mod)) {
 				return rotate;
 			}
 			rotate++;
 		}
 		return -1;
 	}
-	
+
+	public void rotateCClock() {
+		rotateCclock = true;
+	}
+
 	private boolean end;
-	
+
 	public void end() {
 		end = true;
 	}

@@ -32,7 +32,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	private boolean moveLeft = false;
 	private boolean held = false;
 	private boolean spaceHeld = false;
-	private boolean moveDown = false;
+	private static boolean moveDown = false;
 	private boolean contacting = false;
 	private boolean pause = true;
 	private boolean hold = false;
@@ -81,6 +81,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 				g.setColor(Color.black);
 				g.setFont(new Font("Test", 0, 30));
 				g.drawString("Game Over", 110, 250);
+				g.drawString("Score:" + score, 110, 350);
 			}
 		}
 		try {
@@ -127,8 +128,9 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 						contacting = true;
 					} else {
 						board.moveDown();
+						score++;
 					}
-					score += 1;
+					System.out.println(score);
 					downCnt = 0;
 				}
 			} else if (frameNum >= levelSpeed[board.level()] && !end) {
@@ -143,23 +145,23 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 				frameNum = 0;
 			}
 			if (moveRight) {
-				if(dcRight > 15) {
-					rightCnt += 3;
+				if (dcRight >= 8) {
+					rightCnt++;
 				} else {
 					dcRight++;
 				}
-				if (rightCnt >= 5) {
+				if (rightCnt >= 2) {
 					board.moveSide(true);
 					rightCnt = 0;
 				}
 			}
 			if (moveLeft) {
-				if(dcLeft > 15) {
-					leftCnt += 3;
+				if (dcLeft >= 8) {
+					leftCnt++;
 				} else {
 					dcLeft++;
 				}
-				if (leftCnt >= 5) {
+				if (leftCnt >= 2) {
 					board.moveSide(false);
 					leftCnt = 0;
 				}
@@ -345,6 +347,9 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 			if (state == 0)
 				startGame();
 			break;
+		case 17:
+			board.rotateCClock();
+			break;
 		}
 
 	}
@@ -398,6 +403,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	private static boolean end;
 
 	public static void endGame() {
+		moveDown = false;
 		state = 2;
 		end = true;
 	}
