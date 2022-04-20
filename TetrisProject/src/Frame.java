@@ -39,6 +39,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	private boolean pause = true;
 	private boolean hold = false;
 	private boolean held3 = false;
+	private ArrayList<UIElement> UI;
 	private Point mouseXY;
 	private static int state;
 	private static Board board;
@@ -53,8 +54,15 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 
 	public void paint(Graphics g) {
 		if (state == 0) {
+			g.setColor(Color.white);
+			g.fillRect(0, 0, 500, 1000);
 			g.setColor(Color.blue);
 			g.drawString("Tetris", 200, 200);
+			System.out.println(UI.size());
+			for(UIElement ui : UI) {
+				ui.hover(g, mouseXY.getX(), mouseXY.getY());
+			}
+			
 		}
 		if (state == 1 || state == 2) {
 			g.drawString(score + "", 10, 10);
@@ -182,6 +190,13 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		state = 0;
 		score = 0;
 		initLevel = 0;
+		UI = new ArrayList<UIElement>();
+		try {
+		UI.add(new UIButton(200,200,400,400));
+		} catch (Exception e) {
+			System.out.println("Failed");
+		}
+		System.out.println(UI.size());
 		JFrame f = new JFrame("Tetris");
 		f.setSize(new Dimension(415, 840));
 		f.add(this);
@@ -243,7 +258,6 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 			public void run() {
 				while(true) {
 					mouseXY = MouseInfo.getPointerInfo().getLocation();
-					
 				}
 			}
 		});

@@ -1,12 +1,14 @@
+import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Toolkit;
+import java.net.URL;
 
 public class UIElement {
 	/*
 	 * Types: 0: Sign, displays a string text 1: Button, self explanatory 2: Image,
 	 * just displays an image 3:
 	 */
-
-	private Image hover;
 	private int x;
 	private int y;
 	private int width;
@@ -19,15 +21,25 @@ public class UIElement {
 		this.height = height;
 	}
 
-	public boolean insideBlock(int x, int y) {
-		return (x < ) && ()
+	protected boolean insideBlock(double x, double y) {
+		return (x > this.x && x < this.x + width) && (y > this.y && y < this.y + height);
 	}
 
-	protected int getX() {
+	public int getX() {
 		return x;
 	}
 
-	protected int getY() {
+	public int getY() {
 		return y;
+	}
+	protected int getWidth() {
+		return width;
+	}
+	protected int getHeight() {
+		return height;
+	}
+	
+	public void hover(Graphics g, double x, double y) {
+		return;
 	}
 }
