@@ -206,7 +206,7 @@ public class Board implements Runnable {
 	}
 
 	public void moveDown() {
-		if (checkForCollision(0, 0, 1)) {
+		if (checkForCollision(0, 0, 1) && moveBlocks.size() == 4) {
 			for (Block block : moveBlocks) {
 				block.changeY(block.getY() + 1);
 			}
@@ -548,7 +548,7 @@ public class Board implements Runnable {
 					e.printStackTrace();
 				}
 			}
-			if (rotate) {
+			if (rotate && moveBlocks.size() == 4) {
 				copy();
 				if (moveBlocks.get(0).line()) {
 					r = lineWallKick(1);
@@ -561,12 +561,13 @@ public class Board implements Runnable {
 					if (r != -1) {
 						addChanges(normalWallKick[rotateState][r], 1);
 						rotatePiece(moveBlocks);
+
 					}
 
 				}
 				rotate = false;
 			}
-			if(rotateCclock) {
+			if(rotateCclock && moveBlocks.size() == 4) {
 				copy();
 				if (moveBlocks.get(0).line()) {
 					r = lineWallKick(-1);

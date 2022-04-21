@@ -58,7 +58,6 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 			g.fillRect(0, 0, 500, 1000);
 			g.setColor(Color.blue);
 			g.drawString("Tetris", 200, 200);
-			System.out.println(UI.size());
 			for(UIElement ui : UI) {
 				ui.hover(g, mouseXY.getX(), mouseXY.getY());
 			}
@@ -141,7 +140,6 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 						board.moveDown();
 						score++;
 					}
-					System.out.println(score);
 					downCnt = 0;
 				}
 			} else if (frameNum >= levelSpeed[board.level()] && !end) {
@@ -187,6 +185,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	}
 
 	public Frame() {
+		mouseXY = new Point();
 		state = 0;
 		score = 0;
 		initLevel = 0;
@@ -194,9 +193,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		try {
 		UI.add(new UIButton(200,200,400,400));
 		} catch (Exception e) {
-			System.out.println("Failed");
 		}
-		System.out.println(UI.size());
 		JFrame f = new JFrame("Tetris");
 		f.setSize(new Dimension(415, 840));
 		f.add(this);
@@ -235,6 +232,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 						lock++;
 						if (board.checkForCollision(0, 0, 1)) {
 							contacting = false;
+							lock = 0;
 						}
 					} else {
 						lock = 0;
@@ -261,6 +259,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 				}
 			}
 		});
+		mouseTrack.start();
 			
 
 	}
@@ -300,7 +299,6 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	@Override
 	public void keyPressed(KeyEvent arg0) {
 		// TODO Auto-generated method stub
-		System.out.println(arg0.getKeyCode());
 		switch (arg0.getKeyCode()) {
 		case 39: // right
 			if (state == 0) {
