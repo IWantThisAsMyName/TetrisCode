@@ -58,10 +58,10 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 			g.fillRect(0, 0, 500, 1000);
 			g.setColor(Color.blue);
 			g.drawString("Tetris", 200, 200);
-			for(UIElement ui : UI) {
+			for (UIElement ui : UI) {
 				ui.hover(g, mouseXY.getX(), mouseXY.getY());
 			}
-			
+
 		}
 		if (state == 1 || state == 2) {
 			g.drawString(score + "", 10, 10);
@@ -191,7 +191,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		initLevel = 0;
 		UI = new ArrayList<UIElement>();
 		try {
-		UI.add(new UIButton(200,200,400,400));
+			UI.add(new UIButton(100, 100, 200, 200));
 		} catch (Exception e) {
 		}
 		JFrame f = new JFrame("Tetris");
@@ -250,17 +250,17 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 				}
 			}
 		});
-		
-		
-		Thread mouseTrack = new Thread(new Runnable(){
+
+		Thread mouseTrack = new Thread(new Runnable() {
 			public void run() {
-				while(true) {
-					mouseXY = MouseInfo.getPointerInfo().getLocation();
+				while (true) {
+					mouseXY.setLocation(
+							MouseInfo.getPointerInfo().getLocation().getX() - f.getLocationOnScreen().getX(),
+							MouseInfo.getPointerInfo().getLocation().getY() - f.getLocationOnScreen().getY() - 25);
 				}
 			}
 		});
 		mouseTrack.start();
-			
 
 	}
 

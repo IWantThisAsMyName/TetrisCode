@@ -26,8 +26,7 @@ public class UIElement {
 	}
 
 	protected boolean insideBlock(double x, double y) {
-		System.out.println(x);
-		return (x > this.x && y > this.y);
+		return (x > this.x && x < this.x + width) && (y > this.y && y < this.y + height);
 	}
 
 	public int getX() {
