@@ -401,25 +401,25 @@ public class Board implements Runnable {
 		switch (c) {
 		case 1:
 			linesCleared += 1;
-			Frame.addPoints(100 * (level - 1));
+			Frame.addPoints(100 * (level + 1));
 			tetris = false;
 			break;
 		case 2:
 			linesCleared += 2;
-			Frame.addPoints(300 * (level - 1));
+			Frame.addPoints(300 * (level + 1));
 			tetris = false;
 			break;
 		case 3:
 			linesCleared += 3;
-			Frame.addPoints(500 * (level - 1));
+			Frame.addPoints(500 * (level + 1));
 			tetris = false;
 			break;
 		case 4:
 			linesCleared += 4;
 			if (tetris) {
-				Frame.addPoints(1200 * (level - 1));
+				Frame.addPoints(1200 * (level + 1));
 			} else {
-				Frame.addPoints(800 * (level - 1));
+				Frame.addPoints(800 * (level + 1));
 				tetris = true;
 			}
 			break;

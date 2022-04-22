@@ -255,8 +255,8 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 			public void run() {
 				while (true) {
 					mouseXY.setLocation(
-							MouseInfo.getPointerInfo().getLocation().getX() - f.getLocationOnScreen().getX(),
-							MouseInfo.getPointerInfo().getLocation().getY() - f.getLocationOnScreen().getY() - 25);
+							MouseInfo.getPointerInfo().getLocation().getX() - f.getLocationOnScreen().getX() -10, 
+							MouseInfo.getPointerInfo().getLocation().getY() - f.getLocationOnScreen().getY() - 30);
 				}
 			}
 		});
@@ -302,7 +302,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		switch (arg0.getKeyCode()) {
 		case 39: // right
 			if (state == 0) {
-				if (initLevel < 19) {
+				if (initLevel < 29) {
 					initLevel++;
 				}
 			}
