@@ -39,6 +39,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	private boolean pause = true;
 	private boolean hold = false;
 	private boolean held3 = false;
+	private boolean heldCC = false;
 	private ArrayList<UIElement> UI;
 	private Point mouseXY;
 	private static int state;
@@ -255,8 +256,8 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 			public void run() {
 				while (true) {
 					mouseXY.setLocation(
-							MouseInfo.getPointerInfo().getLocation().getX() - f.getLocationOnScreen().getX() -10, 
-							MouseInfo.getPointerInfo().getLocation().getY() - f.getLocationOnScreen().getY() - 30);
+							MouseInfo.getPointerInfo().getLocation().getX() - f.getLocationOnScreen().getX(),
+							MouseInfo.getPointerInfo().getLocation().getY() - f.getLocationOnScreen().getY() - 25);
 				}
 			}
 		});
@@ -374,7 +375,10 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 				startGame();
 			break;
 		case 17:
-			board.rotateCClock();
+			if (!heldCC) {
+				board.rotateCClock();
+				heldCC = true;
+			}
 			break;
 		}
 
@@ -406,6 +410,9 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 			break;
 		case 27:
 			held3 = false;
+			break;
+		case 17:
+			heldCC = false;
 			break;
 		}
 	}

@@ -189,8 +189,8 @@ public class Board implements Runnable {
 	}
 
 	private void updateLevel() {
-		if(linesCleared/10 >= initLevel) {
-			level = linesCleared/10;
+		if (linesCleared / 10 >= initLevel) {
+			level = linesCleared / 10;
 			return;
 		}
 		level = initLevel;
@@ -235,13 +235,20 @@ public class Board implements Runnable {
 		return false;
 	}
 
-	public void rotatePiece(ArrayList<Block> blocks) {
+	public void rotatePiece(ArrayList<Block> blocks, int mod) {
 		int centerCnt;
 		int x, y;
 		Block center = null;
-		rotateState++;
-		if (rotateState == 4) {
-			rotateState = 0;
+		if(mod == 1) {
+			rotateState++;
+			if (rotateState == 4) {
+				rotateState = 0;
+			}
+		} else {
+			rotateState--;
+			if (rotateState == -1) {
+				rotateState = 3;
+			}
 		}
 		centerCnt = 0;
 		for (Block a : blocks) {
@@ -254,80 +261,85 @@ public class Board implements Runnable {
 			return;
 		}
 		if (centerCnt == 2) {
-			if (rotateState == 0) {
-				y = -2;
-				x = -2;
+			if (mod == 1) {
+				if (rotateState == 0) {
+					y = -2;
+					x = -2;
 
-				for (Block b : blocks) {
-					b.changeX((b.getX() + x));
-					b.changeY((b.getY() + y));
-					x++;
-					y++;
+					for (Block b : blocks) {
+						b.changeX((b.getX() + x));
+						b.changeY((b.getY() + y));
+						x++;
+						y++;
+					}
+					if (subtract) {
+						rotateState--;
+						subtract = false;
+					}
+					if (rotateState < 0) {
+						rotateState = 3;
+					}
+					return;
 				}
-				if (subtract) {
-					rotateState--;
-					subtract = false;
+				if (rotateState == 1) {
+					y = -1;
+					x = 1;
+					for (Block b : blocks) {
+						b.changeX((b.getX() + x));
+						b.changeY((b.getY() + y));
+						x--;
+						y++;
+					}
+					if (subtract) {
+						rotateState--;
+						subtract = false;
+					}
+					if (rotateState < 0) {
+						rotateState = 3;
+					}
+					return;
 				}
-				if (rotateState < 0) {
-					rotateState = 3;
+				if (rotateState == 2) {
+					y = 2;
+					x = 2;
+					for (Block b : blocks) {
+						b.changeX((b.getX() + x));
+						b.changeY((b.getY() + y));
+						x--;
+						y--;
+					}
+					if (subtract) {
+						rotateState--;
+						subtract = false;
+					}
+					if (rotateState < 0) {
+						rotateState = 3;
+					}
+					return;
 				}
-				return;
-			}
-			if (rotateState == 1) {
-				y = -1;
-				x = 1;
-				for (Block b : blocks) {
-					b.changeX((b.getX() + x));
-					b.changeY((b.getY() + y));
-					x--;
-					y++;
-				}
-				if (subtract) {
-					rotateState--;
-					subtract = false;
-				}
-				if (rotateState < 0) {
-					rotateState = 3;
-				}
-				return;
-			}
-			if (rotateState == 2) {
-				y = 2;
-				x = 2;
-				for (Block b : blocks) {
-					b.changeX((b.getX() + x));
-					b.changeY((b.getY() + y));
-					x--;
-					y--;
-				}
-				if (subtract) {
-					rotateState--;
-					subtract = false;
-				}
-				if (rotateState < 0) {
-					rotateState = 3;
-				}
-				return;
-			}
-			if (rotateState == 3) {
-				y = 1;
-				x = -1;
-				for (Block b : blocks) {
-					b.changeX((b.getX() + x));
-					b.changeY((b.getY() + y));
-					x++;
-					y--;
+				if (rotateState == 3) {
+					y = 1;
+					x = -1;
+					for (Block b : blocks) {
+						b.changeX((b.getX() + x));
+						b.changeY((b.getY() + y));
+						x++;
+						y--;
 
+					}
+					if (subtract) {
+						rotateState--;
+						subtract = false;
+					}
+					if (rotateState < 0) {
+						rotateState = 3;
+					}
+					return;
 				}
-				if (subtract) {
-					rotateState--;
-					subtract = false;
-				}
-				if (rotateState < 0) {
-					rotateState = 3;
-				}
-				return;
+			} else {
+				
 			}
+			
 		}
 
 		for (
@@ -342,8 +354,21 @@ public class Board implements Runnable {
 			if (!b.center()) {
 				x = (b.getX() - center.getX());
 				y = (b.getY() - center.getY());
-
-				if (x != 0 && y != 0) {
+				if (mod == -1 && x != 0 && y != 0) {
+					System.out.println("negative mod");
+					if (x == 1 && y == 1) {
+						b.changeY(b.getY() - 2);
+					}
+					if (x == -1 && y == 1) {
+						b.changeX(b.getX() + 2);
+					}
+					if (x == -1 && y == -1) {
+						b.changeY(b.getY() + 2);
+					}
+					if (x == 1 && y == -1) {
+						b.changeX(b.getX() - 2);
+					}
+				} else if (x != 0 && y != 0) {
 					if (x == 1 && y == 1) {
 						b.changeX(b.getX() - 2);
 					}
@@ -360,18 +385,18 @@ public class Board implements Runnable {
 				} else {
 					if (x == 1) {
 						b.changeX(b.getX() - 1);
-						b.changeY(b.getY() + 1);
+						b.changeY(b.getY() + (1 * mod));
 					}
 					if (x == -1) {
 						b.changeX(b.getX() + 1);
-						b.changeY(b.getY() - 1);
+						b.changeY(b.getY() - (1 * mod));
 					}
 					if (y == 1) {
-						b.changeX(b.getX() - 1);
+						b.changeX(b.getX() - (1 * mod));
 						b.changeY(b.getY() - 1);
 					}
 					if (y == -1) {
-						b.changeX(b.getX() + 1);
+						b.changeX(b.getX() + (1 * mod));
 						b.changeY(b.getY() + 1);
 					}
 				}
@@ -554,36 +579,36 @@ public class Board implements Runnable {
 					r = lineWallKick(1);
 					if (r != -1) {
 						addChanges(wallKickIPiece[rotateState][r], 1);
-						rotatePiece(moveBlocks);
+						rotatePiece(moveBlocks, 1);
 					}
 				} else {
 					r = wallKickCheck(1);
 					if (r != -1) {
 						addChanges(normalWallKick[rotateState][r], 1);
-						rotatePiece(moveBlocks);
+						rotatePiece(moveBlocks, 1);
 
 					}
 
 				}
 				rotate = false;
 			}
-			if(rotateCclock && moveBlocks.size() == 4) {
+			if (rotateCclock && moveBlocks.size() == 4) {
 				copy();
 				if (moveBlocks.get(0).line()) {
 					r = lineWallKick(-1);
 					if (r != -1) {
 						addChanges(wallKickIPiece[rotateState][r], -1);
-						rotatePiece(moveBlocks);
+						rotatePiece(moveBlocks, -1);
 					}
 				} else {
 					r = wallKickCheck(-1);
 					if (r != -1) {
 						addChanges(normalWallKick[rotateState][r], -1);
-						rotatePiece(moveBlocks);
+						rotatePiece(moveBlocks, -1);
 					}
 
 				}
-				rotate = false;
+				rotateCclock = false;
 			}
 			try {
 				Thread.sleep(16, 666667);
@@ -621,8 +646,8 @@ public class Board implements Runnable {
 
 	private void addChanges(int[] changes, int mod) {
 		for (Block b : moveBlocks) {
-			b.changeX(b.getX() + changes[0] * mod);
-			b.changeY(b.getY() + changes[1] * mod);
+			b.changeX(b.getX() + (changes[0] * mod));
+			b.changeY(b.getY() + (changes[1] * mod));
 		}
 	}
 
@@ -631,7 +656,7 @@ public class Board implements Runnable {
 	private int lineWallKick(int mod) {
 		int rotate = 0;
 		subtract = true;
-		rotatePiece(rotateCheck);
+		rotatePiece(rotateCheck, mod);
 		for (int i = 0; i < 5; i++) {
 			if (legal(wallKickIPiece[rotateState][i], mod)) {
 				return rotate;
@@ -644,7 +669,7 @@ public class Board implements Runnable {
 	private int wallKickCheck(int mod) {
 		// Check 0 (Default Check)
 		int rotate = 0;
-		rotatePiece(rotateCheck);
+		rotatePiece(rotateCheck, mod);
 		for (int i = 0; i < 5; i++) {
 			if (legal(normalWallKick[rotateState][i], mod)) {
 				return rotate;
