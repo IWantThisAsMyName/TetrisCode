@@ -192,7 +192,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		initLevel = 0;
 		UI = new ArrayList<UIElement>();
 		try {
-			UI.add(new UIButton(100, 100, 200, 200));
+			UI.add(new UIButton(new int[] {30, 60, 30}, new int[] {30, 60, 60}));
 		} catch (Exception e) {
 		}
 		JFrame f = new JFrame("Tetris");
@@ -256,8 +256,8 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 			public void run() {
 				while (true) {
 					mouseXY.setLocation(
-							MouseInfo.getPointerInfo().getLocation().getX() - f.getLocationOnScreen().getX(),
-							MouseInfo.getPointerInfo().getLocation().getY() - f.getLocationOnScreen().getY() - 25);
+							MouseInfo.getPointerInfo().getLocation().getX() - f.getLocationOnScreen().getX() - 7,
+							MouseInfo.getPointerInfo().getLocation().getY() - f.getLocationOnScreen().getY() - 30);
 				}
 			}
 		});
