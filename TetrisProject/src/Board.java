@@ -28,7 +28,7 @@ public class Board implements Runnable {
 	private ArrayList<Boolean> basicCheck;
 	private ArrayList<Integer> lineRemoval;
 
-	@SuppressWarnings("static-access")
+
 	public Board(int level) {
 		placedBlocks = new Block[23][10];
 		moveBlocks = new ArrayList<Block>();
