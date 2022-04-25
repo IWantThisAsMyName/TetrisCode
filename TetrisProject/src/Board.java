@@ -337,7 +337,7 @@ public class Board implements Runnable {
 					return;
 				}
 			} else {
-				
+				return;
 			}
 			
 		}

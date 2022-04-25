@@ -31,10 +31,12 @@ public class UIButton extends UIElement {
 			}
 			return;
 		}
-		Rectangle box = poly.getBounds();
-		if (box.contains(new Point((int) x, (int) y))) {
-			if (inside(x, y)) {
-				g.fillPolygon(poly);
+		if (poly != null) {
+			Rectangle box = poly.getBounds();
+			if (box.contains(new Point((int) x, (int) y))) {
+				if (inside(x, y)) {
+					g.fillPolygon(poly);
+				}
 			}
 		}
 	}
