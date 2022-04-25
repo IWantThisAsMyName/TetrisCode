@@ -355,6 +355,7 @@ public class Board implements Runnable {
 				x = (b.getX() - center.getX());
 				y = (b.getY() - center.getY());
 				if (mod == -1 && x != 0 && y != 0) {
+					System.out.println("negative mod");
 					if (x == 1 && y == 1) {
 						b.changeY(b.getY() - 2);
 					}
