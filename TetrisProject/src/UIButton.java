@@ -19,7 +19,7 @@ public class UIButton extends UIElement {
 		super();
 		xCoords = x;
 		yCoords = y;
-		poly = new Polygon(x, y, 3);
+		poly = new Polygon(x, y, x.length);
 	}
 
 	public void hover(Graphics g, double x, double y) {

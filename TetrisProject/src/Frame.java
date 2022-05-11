@@ -2,9 +2,11 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.MouseInfo;
 import java.awt.Point;
+import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -52,6 +54,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	private static int initLevel;
 	private static int lock = 0;
 	private static int[] nextBlocks;
+	private int startCnt = 0;
 
 	public void paint(Graphics g) {
 		if (state == 0) {
@@ -61,6 +64,16 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 			g.drawString("Tetris", 200, 200);
 			for (UIElement ui : UI) {
 				ui.hover(g, mouseXY.getX(), mouseXY.getY());
+				ui.paint(g);
+			}
+			g.setColor(new Color(22, 180, 72));
+			Graphics2D g2D = (Graphics2D) g;
+			g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			g2D.setFont(new Font("Graduate", 80, 80));
+			if(initLevel < 10) {
+				g2D.drawString(initLevel + "", 565, 600);
+			} else {
+				g2D.drawString(initLevel + "", 540, 600);
 			}
 
 		}
@@ -95,6 +108,15 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 				g.drawString("Score:" + score, 110, 350);
 			}
 		}
+		if(state == 4) {
+			//System.out.println("waiting " + frameNum);
+			if(startCnt >= 180) {
+				state = 1;
+				startCnt = 0;
+			}
+			startCnt++;
+		}
+		
 		try {
 			Thread.sleep(16, 666667);
 		} catch (InterruptedException e) {
@@ -130,7 +152,6 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 					e.printStackTrace();
 				}
 			}
-
 			frameNum++;
 			if (moveDown && board.level() <= 18) {
 				downCnt++;
@@ -191,12 +212,10 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		score = 0;
 		initLevel = 0;
 		UI = new ArrayList<UIElement>();
-		try {
-			UI.add(new UIButton(100, 100, 200, 200));
-		} catch (Exception e) {
-		}
+		UI.add(new UIButton(100, 100, 200, 200));
+		UI.add(new UIImage(0,0,1080,765,"imgs/menu.png"));
 		JFrame f = new JFrame("Tetris");
-		f.setSize(new Dimension(415, 840));
+		f.setSize(new Dimension(1035, 793));
 		f.add(this);
 		f.setResizable(false);
 		f.setLayout(new GridLayout(1, 1));
@@ -300,13 +319,9 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	@Override
 	public void keyPressed(KeyEvent arg0) {
 		// TODO Auto-generated method stub
+		System.out.println(arg0.getKeyCode());
 		switch (arg0.getKeyCode()) {
 		case 39: // right
-			if (state == 0) {
-				if (initLevel < 29) {
-					initLevel++;
-				}
-			}
 			if (state == 1) {
 				if (!moveRight) {
 					rightCnt = 5;
@@ -314,13 +329,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 				moveRight = true;
 			}
 			break;
-
 		case 37: // left
-			if (state == 0) {
-				if (initLevel > 0) {
-					initLevel--;
-				}
-			}
 			if (state == 1) {
 				if (!moveLeft) {
 					leftCnt = 5;
@@ -337,6 +346,11 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 			break;
 
 		case 38: // rotate, up key
+			if (state == 0) {
+				if (initLevel < 19) {
+					initLevel++;
+				}
+			}
 			if (!held && state == 1) {
 				if (pause) {
 					board.rotate();
@@ -346,6 +360,11 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 			break;
 
 		case 40: // soft drop, down key
+			if (state == 0) {
+				if (initLevel > 0) {
+					initLevel--;
+				}
+			}
 			if (state == 1) {
 				downCnt = 0;
 				moveDown = true;
@@ -424,8 +443,15 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	}
 
 	private static void startGame() {
-		state = 1;
+		state = 4;
 		end = false;
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("Start");
 		board = new Board(initLevel);
 		rotateThread = new Thread(board);
 		rotateThread.start();

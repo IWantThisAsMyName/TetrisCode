@@ -46,4 +46,8 @@ public class UIElement {
 	public void hover(Graphics g, double x, double y) {
 		return;
 	}
+	
+	public void paint(Graphics g) {
+		return;
+	}
 }
