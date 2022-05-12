@@ -59,7 +59,6 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	public void paint(Graphics g) {
 		if (state == 0) {
 			g.setColor(Color.white);
-			g.fillRect(0, 0, 500, 1000);
 			g.setColor(Color.blue);
 			g.drawString("Tetris", 200, 200);
 			for (UIElement ui : UI) {
@@ -71,15 +70,18 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 			g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			g2D.setFont(new Font("Graduate", 80, 80));
 			if(initLevel < 10) {
-				g2D.drawString(initLevel + "", 565, 600);
+				g2D.drawString("0" + initLevel + "", 543, 600);
 			} else {
 				g2D.drawString(initLevel + "", 540, 600);
 			}
+			g2D.drawString("A", 428, 600);
+			g.setColor(Color.white);
+			g.drawLine(578, 0, 578, 2000);
+			g.drawLine(579, 0, 579, 2000);
 
 		}
 		if (state == 1 || state == 2) {
 			g.drawString(score + "", 10, 10);
-			g.fillRect(-10, -10, 500, 900);
 			for (Block[] arr : board.getBlocks()) {
 				for (Block b : arr) {
 					try {
@@ -210,12 +212,12 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		mouseXY = new Point();
 		state = 0;
 		score = 0;
-		initLevel = 0;
+		initLevel = 1;
 		UI = new ArrayList<UIElement>();
 		UI.add(new UIButton(100, 100, 200, 200));
-		UI.add(new UIImage(0,0,1080,765,"imgs/menu.png"));
+		UI.add(new UIImage(0,0,1204,850,"imgs/menu.png"));
 		JFrame f = new JFrame("Tetris");
-		f.setSize(new Dimension(1035, 793));
+		f.setSize(new Dimension(1156, 879));
 		f.add(this);
 		f.setResizable(false);
 		f.setLayout(new GridLayout(1, 1));
@@ -361,7 +363,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 
 		case 40: // soft drop, down key
 			if (state == 0) {
-				if (initLevel > 0) {
+				if (initLevel > 1) {
 					initLevel--;
 				}
 			}
