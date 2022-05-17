@@ -1,3 +1,4 @@
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -7,6 +8,7 @@ import java.awt.GridLayout;
 import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.RenderingHints;
+import java.awt.Stroke;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -55,8 +57,10 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	private static int lock = 0;
 	private static int[] nextBlocks;
 	private int startCnt = 0;
+	private UIElement bg;
 
 	public void paint(Graphics g) {
+		Graphics2D g2d = (Graphics2D) g;
 		if (state == 0) {
 			g.setColor(Color.white);
 			g.setColor(Color.blue);
@@ -81,8 +85,15 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 
 		}
 		if (state == 1 || state == 2) {
+			bg.paint(g);
+			g.setColor(new Color(32, 142, 116));
+			g.fillRect(309, 40, 410, 50);
+			g.setColor(Color.black);
+			g2d.setStroke(new BasicStroke(5));
+			g2d.drawRect(311, 42, 405, 765);
 			g.drawString(score + "", 10, 10);
 			for (Block[] arr : board.getBlocks()) {
+				
 				for (Block b : arr) {
 					try {
 						b.paint(g);
@@ -216,8 +227,9 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		UI = new ArrayList<UIElement>();
 		UI.add(new UIButton(100, 100, 200, 200));
 		UI.add(new UIImage(0,0,1204,850,"imgs/menu.png"));
+		bg = new UIImage(0,0, 1024, 850, "imgs/Game screen.png");
 		JFrame f = new JFrame("Tetris");
-		f.setSize(new Dimension(1156, 879));
+		f.setSize(new Dimension(1024, 879));
 		f.add(this);
 		f.setResizable(false);
 		f.setLayout(new GridLayout(1, 1));
@@ -445,14 +457,8 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	}
 
 	private static void startGame() {
-		state = 4;
+		state = 1;
 		end = false;
-		try {
-			Thread.sleep(3000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		System.out.println("Start");
 		board = new Board(initLevel);
 		rotateThread = new Thread(board);

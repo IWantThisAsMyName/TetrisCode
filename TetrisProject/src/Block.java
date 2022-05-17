@@ -118,8 +118,8 @@ public class Block {
 
 	public void paint(Graphics g) {
 		Graphics2D g2D = (Graphics2D) g;
-		if(y >= 0) {
-			g2D.drawImage(image, x * 40, (y - 3) * 40, 40, 40, null);
+		if(y >= 4) {
+			g2D.drawImage(image, 314 + (x * 40), 5 + (y - 3) * 40, 40, 40, null);
 		}
 	}
 
