@@ -73,7 +73,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 			Graphics2D g2D = (Graphics2D) g;
 			g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			g2D.setFont(new Font("Graduate", 80, 80));
-			if(initLevel < 10) {
+			if (initLevel < 10) {
 				g2D.drawString("0" + initLevel + "", 543, 600);
 			} else {
 				g2D.drawString(initLevel + "", 540, 600);
@@ -92,17 +92,32 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 			g2d.setStroke(new BasicStroke(5));
 			g2d.drawRect(311, 42, 405, 765);
 			g.drawString(score + "", 10, 10);
-			for (Block[] arr : board.getBlocks()) {
-				
-				for (Block b : arr) {
-					try {
-						b.paint(g);
-					} catch (Exception e) {
+			try {
+				for (Block[] arr : board.getBlocks()) {
+
+					for (Block b : arr) {
+						try {
+							b.paint(g);
+						} catch (Exception e) {
+						}
 					}
 				}
+			} catch (Exception e) {
+
 			}
-			for (Block b : board.getMoveBlocks()) {
-				b.paint(g);
+			try {
+				for (Block b : board.getGhostBlocks()) {
+					b.paint(g);
+				}
+			} catch (Exception e) {
+
+			}
+			try {
+				for (Block b : board.getMoveBlocks()) {
+					b.paint(g);
+				}
+			} catch (Exception e) {
+
 			}
 			// Draws the pause menu
 			if (!pause) {
@@ -121,15 +136,15 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 				g.drawString("Score:" + score, 110, 350);
 			}
 		}
-		if(state == 4) {
-			//System.out.println("waiting " + frameNum);
-			if(startCnt >= 180) {
+		if (state == 4) {
+			// System.out.println("waiting " + frameNum);
+			if (startCnt >= 180) {
 				state = 1;
 				startCnt = 0;
 			}
 			startCnt++;
 		}
-		
+
 		try {
 			Thread.sleep(16, 666667);
 		} catch (InterruptedException e) {
@@ -226,8 +241,8 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		initLevel = 1;
 		UI = new ArrayList<UIElement>();
 		UI.add(new UIButton(100, 100, 200, 200));
-		UI.add(new UIImage(0,0,1204,850,"imgs/menu.png"));
-		bg = new UIImage(0,0, 1024, 850, "imgs/Game screen.png");
+		UI.add(new UIImage(0, 0, 1204, 850, "imgs/menu.png"));
+		bg = new UIImage(0, 0, 1024, 850, "imgs/Game screen.png");
 		JFrame f = new JFrame("Tetris");
 		f.setSize(new Dimension(1024, 879));
 		f.add(this);
@@ -333,7 +348,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	@Override
 	public void keyPressed(KeyEvent arg0) {
 		// TODO Auto-generated method stub
-		System.out.println(arg0.getKeyCode());
+		
 		switch (arg0.getKeyCode()) {
 		case 39: // right
 			if (state == 1) {
@@ -459,7 +474,6 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	private static void startGame() {
 		state = 1;
 		end = false;
-		System.out.println("Start");
 		board = new Board(initLevel);
 		rotateThread = new Thread(board);
 		rotateThread.start();

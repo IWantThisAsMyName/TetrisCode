@@ -12,6 +12,8 @@ public class Board implements Runnable {
 	private boolean tetris;
 	private int initLevel;
 	private boolean rotateCclock;
+	private ArrayList<Block> ghostPiece;
+	private Thread ghost;
 	// First number is X, second is Y
 	// For a clockwise check multiply values by -1
 	private final int normalWallKick[][][] = {
@@ -28,7 +30,6 @@ public class Board implements Runnable {
 	private ArrayList<Boolean> basicCheck;
 	private ArrayList<Integer> lineRemoval;
 
-
 	public Board(int level) {
 		placedBlocks = new Block[23][10];
 		moveBlocks = new ArrayList<Block>();
@@ -36,6 +37,40 @@ public class Board implements Runnable {
 		secondaryGen = new ArrayList<Integer>();
 		basicCheck = new ArrayList<Boolean>();
 		lineRemoval = new ArrayList<Integer>();
+		ghostPiece = new ArrayList<>();
+		ghost = new Thread(new Runnable() {
+			public void run() {
+				ghostPiece.add(null);
+				ghostPiece.add(null);
+				ghostPiece.add(null);
+				ghostPiece.add(null);
+				while (true) {
+					while (!run) {
+						try {
+							Thread.sleep(16, 666667);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+					while (end) {
+						try {
+							Thread.sleep(16, 666667);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+					try {
+						Thread.sleep(16, 66667);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		});
+		ghost.start();
 		linesCleared = 0;
 		heldBlock = -1;
 		heldMove = false;
@@ -98,6 +133,7 @@ public class Board implements Runnable {
 			moveBlocks.add(new Block(0, 5, 0, true));
 			moveBlocks.add(new Block(0, 6, 0, false));
 			rotateState = 0;
+			ghostPiece();
 			return;
 		}
 		// O Piece
@@ -107,6 +143,7 @@ public class Board implements Runnable {
 			moveBlocks.add(new Block(1, 5, 1, false));
 			moveBlocks.add(new Block(1, 4, 1, false));
 			rotateState = 0;
+			ghostPiece();
 			return;
 		}
 		// L Piece
@@ -116,6 +153,7 @@ public class Board implements Runnable {
 			moveBlocks.add(new Block(2, 5, 1, false));
 			moveBlocks.add(new Block(2, 3, 0, false));
 			rotateState = 0;
+			ghostPiece();
 			return;
 		}
 		// J Piece
@@ -125,6 +163,7 @@ public class Board implements Runnable {
 			moveBlocks.add(new Block(3, 5, 0, false));
 			moveBlocks.add(new Block(3, 5, 1, false));
 			rotateState = 0;
+			ghostPiece();
 			return;
 		}
 		// S Piece
@@ -134,6 +173,7 @@ public class Board implements Runnable {
 			moveBlocks.add(new Block(4, 4, 1, false));
 			moveBlocks.add(new Block(4, 5, 1, false));
 			rotateState = 0;
+			ghostPiece();
 			return;
 		}
 		// Z Piece
@@ -143,6 +183,7 @@ public class Board implements Runnable {
 			moveBlocks.add(new Block(5, 4, 0, true));
 			moveBlocks.add(new Block(5, 5, 0, false));
 			rotateState = 0;
+			ghostPiece();
 			return;
 		}
 		// T Piece
@@ -150,6 +191,7 @@ public class Board implements Runnable {
 		moveBlocks.add(new Block(6, 4, 0, false));
 		moveBlocks.add(new Block(6, 4, 1, true));
 		moveBlocks.add(new Block(6, 5, 1, false));
+		ghostPiece();
 	}
 
 	public ArrayList<Block> getMoveBlocks() {
@@ -220,6 +262,7 @@ public class Board implements Runnable {
 					block.changeX(block.getX() + 1);
 				}
 			}
+			ghostPiece();
 			return;
 		}
 		if (checkForCollision(0, 1, 0)) {
@@ -227,6 +270,7 @@ public class Board implements Runnable {
 				block.changeX(block.getX() - 1);
 
 			}
+			ghostPiece();
 		}
 	}
 
@@ -239,7 +283,7 @@ public class Board implements Runnable {
 		int centerCnt;
 		int x, y;
 		Block center = null;
-		if(mod == 1) {
+		if (mod == 1) {
 			rotateState++;
 			if (rotateState == 4) {
 				rotateState = 0;
@@ -256,7 +300,7 @@ public class Board implements Runnable {
 				centerCnt++;
 			}
 		}
-
+		
 		if (centerCnt == 0) {
 			return;
 		}
@@ -279,6 +323,7 @@ public class Board implements Runnable {
 					if (rotateState < 0) {
 						rotateState = 3;
 					}
+					ghostPiece();
 					return;
 				}
 				if (rotateState == 1) {
@@ -297,6 +342,7 @@ public class Board implements Runnable {
 					if (rotateState < 0) {
 						rotateState = 3;
 					}
+					ghostPiece();
 					return;
 				}
 				if (rotateState == 2) {
@@ -315,6 +361,7 @@ public class Board implements Runnable {
 					if (rotateState < 0) {
 						rotateState = 3;
 					}
+					ghostPiece();
 					return;
 				}
 				if (rotateState == 3) {
@@ -334,12 +381,13 @@ public class Board implements Runnable {
 					if (rotateState < 0) {
 						rotateState = 3;
 					}
+					ghostPiece();
 					return;
 				}
 			} else {
 				return;
 			}
-			
+
 		}
 
 		for (
@@ -355,7 +403,6 @@ public class Board implements Runnable {
 				x = (b.getX() - center.getX());
 				y = (b.getY() - center.getY());
 				if (mod == -1 && x != 0 && y != 0) {
-					System.out.println("negative mod");
 					if (x == 1 && y == 1) {
 						b.changeY(b.getY() - 2);
 					}
@@ -402,6 +449,7 @@ public class Board implements Runnable {
 				}
 			}
 		}
+		ghostPiece();
 	}
 
 	private void removeLines() {
@@ -687,5 +735,42 @@ public class Board implements Runnable {
 
 	public void end() {
 		end = true;
+	}
+
+	private void ghostPiece(){
+		int i = 0;
+		for(Block b : moveBlocks) {
+			ghostPiece.set(i, new Block(true, b.getX(), b.getY(), false));
+			i++;
+		}
+		ghostLow();
+	}
+
+	public void ghostLow() {
+		int i = 0;
+		while(true) {
+			for(Block b : ghostPiece) {
+				try {
+					if (placedBlocks[b.getY() + 1][b.getX()] != null) {
+						System.out.println(i);
+						return;
+					} 
+				} catch (Exception e) {
+					System.out.println(i);
+					return;
+				}
+			}
+			for(Block b : ghostPiece) {
+				if(i == 0) {
+					System.out.println("Breaks");
+				}
+				b.changeY(b.getY() + 1);
+			}
+			i++;
+		}
+	}
+	
+	public ArrayList<Block> getGhostBlocks(){
+		return ghostPiece;
 	}
 }

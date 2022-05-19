@@ -40,6 +40,12 @@ public class Block {
 		}
 	}
 	
+	public Block(boolean ghostPiece, int x, int y, boolean center) {
+		this.x = x;
+		this.y = y + 1;
+		image = getImage("imgs/ghost.png");
+	}
+	
 	public Block(int color, int x, int y, boolean rotateCenter, boolean line) {
 		this.x = x;
 		this.y = y + 1;
