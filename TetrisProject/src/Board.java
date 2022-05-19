@@ -740,33 +740,27 @@ public class Board implements Runnable {
 	private void ghostPiece(){
 		int i = 0;
 		for(Block b : moveBlocks) {
-			ghostPiece.set(i, new Block(true, b.getX(), b.getY(), false));
+			ghostPiece.set(i, new Block(true, b.getX(), b.getY() - 1, false));
 			i++;
 		}
 		ghostLow();
 	}
 
 	public void ghostLow() {
-		int i = 0;
 		while(true) {
 			for(Block b : ghostPiece) {
 				try {
 					if (placedBlocks[b.getY() + 1][b.getX()] != null) {
-						System.out.println(i);
 						return;
 					} 
-				} catch (Exception e) {
-					System.out.println(i);
+				} catch (Exception NPE) {
 					return;
 				}
 			}
 			for(Block b : ghostPiece) {
-				if(i == 0) {
-					System.out.println("Breaks");
-				}
+				
 				b.changeY(b.getY() + 1);
 			}
-			i++;
 		}
 	}
 	
