@@ -739,9 +739,19 @@ public class Board implements Runnable {
 
 	private void ghostPiece(){
 		int i = 0;
+		try {
 		for(Block b : moveBlocks) {
 			ghostPiece.set(i, new Block(true, b.getX(), b.getY() - 1, false));
 			i++;
+		}
+		} catch (Exception e) {
+			try {
+				Thread.sleep(1);
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			ghostPiece();
 		}
 		ghostLow();
 	}

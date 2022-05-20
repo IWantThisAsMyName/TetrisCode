@@ -16,7 +16,6 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -70,28 +69,29 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 				ui.paint(g);
 			}
 			g.setColor(new Color(22, 180, 72));
-			Graphics2D g2D = (Graphics2D) g;
-			g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-			g2D.setFont(new Font("Graduate", 80, 80));
+			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			g2d.setFont(new Font("Graduate", 80, 80));
 			if (initLevel < 10) {
-				g2D.drawString("0" + initLevel + "", 543, 600);
+				g2d.drawString("0" + initLevel + "", 543, 600);
 			} else {
-				g2D.drawString(initLevel + "", 540, 600);
+				g2d.drawString(initLevel + "", 540, 600);
 			}
-			g2D.drawString("A", 428, 600);
+			g2d.drawString("A", 428, 600);
 			g.setColor(Color.white);
 			g.drawLine(578, 0, 578, 2000);
 			g.drawLine(579, 0, 579, 2000);
 
 		}
 		if (state == 1 || state == 2) {
+			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			bg.paint(g);
 			g.setColor(new Color(32, 142, 116));
 			g.fillRect(309, 40, 410, 50);
 			g.setColor(Color.black);
+			g2d.setFont(new Font("Times New Roman", 50, 50));
 			g2d.setStroke(new BasicStroke(5));
-			g2d.drawRect(311, 42, 405, 765);
-			g.drawString(score + "", 10, 10);
+			g2d.drawRect(311, 42, 405, 765);	
+			printSimpleString(score + "", g2d.getFontMetrics().stringWidth(score + ""), 100, 300, g2d);
 			try {
 				for (Block[] arr : board.getBlocks()) {
 
@@ -152,6 +152,13 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 			e.printStackTrace();
 		}
 	}
+	
+	private void printSimpleString(String s, int width, int XPos, int YPos, Graphics2D g2d){
+        int stringLen = (int)
+            g2d.getFontMetrics().getStringBounds(s, g2d).getWidth();
+        int start = width/2 - stringLen/2;
+        g2d.drawString(s, start + XPos, YPos);
+ }
 
 	public static void addPoints(int points) {
 		score += points;
