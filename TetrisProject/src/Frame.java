@@ -57,6 +57,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	private static int[] nextBlocks;
 	private int startCnt = 0;
 	private UIElement bg;
+	private ArrayList<UIImage> nextPieces;
 
 	public void paint(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
