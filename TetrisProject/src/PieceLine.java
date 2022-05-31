@@ -10,7 +10,7 @@ public class PieceLine {
 	public void drawPieces(Graphics g, int[] pieces) {
 		g.drawImage(images[pieces[0]], 48, 415, 140, 70, null);
 		for(int i = 1; i < 6; i++) {
-			g.drawImage(images[pieces[i]], 840, 278 + ((i - 1 )* 65), 120, 60, null);
+			g.drawImage(images[pieces[i]], 840, 283 + ((i - 1 )* 65), 120, 60, null);
 		}
 	}
 	

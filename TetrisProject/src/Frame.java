@@ -60,6 +60,8 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	private ArrayList<UIImage> nextPieces;
 	private PieceLine pL;
 	public static int heldBlock = -1;
+	private UIElement pause1 = new UIImage(265,20, 500, 800, "imgs/pause.png");
+	private UIElement over = new UIImage(185, 255, 666, 375, "imgs/over.png");
 
 	public void paint(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
@@ -124,24 +126,13 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 			}
 			// Draws the pause menu
 			if (!pause) {
-				g.setColor(Color.gray);
-				g.fillRect(75, 200, 250, 400);
-				g.setColor(Color.black);
-				g.setFont(new Font("Test", 0, 30));
-				g.drawString("Game Paused", 110, 250);
+				pause1.paint(g);
 			}
 			if (state == 2) {
-				
+				over.paint(g);
 			}
 		}
-		if (state == 4) {
-			// System.out.println("waiting " + frameNum);
-			if (startCnt >= 180) {
-				state = 1;
-				startCnt = 0;
-			}
-			startCnt++;
-		}
+		
 
 		try {
 			Thread.sleep(16, 666667);
@@ -374,7 +365,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 			break;
 
 		case 32: // instant drop, space bar
-			if (!spaceHeld && state == 1) {
+			if (!spaceHeld && state == 1 && pause) {
 				board.hardDrop();
 				spaceHeld = true;
 			}
