@@ -83,6 +83,7 @@ public class Board implements Runnable {
 		initLevel = level;
 		generatePieces();
 		newPiece();
+		Frame.updateNextBlocks(primaryGen, secondaryGen);
 	}
 
 	private void generatePieces() {
@@ -537,16 +538,19 @@ public class Board implements Runnable {
 			for (int i = 3; i >= 0; i--) {
 				moveBlocks.remove(i);
 			}
+			Frame.heldBlock = current;
 			heldBlock = current;
 			newPiece();
 			heldMove = true;
 			return;
 		}
 		heldBlock = current;
+		Frame.heldBlock = current; 
 		for (int i = 3; i >= 0; i--) {
 			moveBlocks.remove(i);
 		}
 		generatePieces();
+		Frame.updateNextBlocks(primaryGen, secondaryGen);
 		newPiece();
 		heldMove = true;
 	}
