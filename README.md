@@ -6,7 +6,7 @@ by: Camden Bartelt and Calvin Luo
 - Left arrow: move piece left
 - Right arrow: move piece right
 - Up arrow: rotate piece OR increase level
-- Down arrow: soft drop piece (stronger gravity) OR decrease level
+- Down arrow: soft drop piece OR decrease level
 - Space bar: hard (instant) drop piece
 - Esc: pause/unpause
 - C: hold piece/unhold piece
