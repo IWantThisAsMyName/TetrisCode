@@ -1,7 +1,7 @@
 # Tetris
 by: Camden Bartelt and Calvin Luo
 
-![Pieces](https://o.remove.bg/downloads/6f508425-a86a-4755-864d-f2a3c9f467ca/pieces-removebg-preview.png)
+![Pieces](https://i.postimg.cc/HnBNRC7K/pieces-removebg-preview.png)
 ## Controls
 - Left arrow: move piece left
 - Right arrow: move piece right
