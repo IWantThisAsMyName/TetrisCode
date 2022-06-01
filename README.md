@@ -13,7 +13,7 @@ by: Camden Bartelt and Calvin Luo
 - Enter: start game
 ## Most Basic Rules
 - Pieces come from the top of the board
-- Can only move pieces left and right along with rotation and instant dropping
+- Pieces rotate, drop instantly, and move left and right
 - Game is over once pieces reach the top of the board
 - Can only remove pieces once all space in a line is filled
 - More lines cleared = faster pace
@@ -31,3 +31,12 @@ by: Camden Bartelt and Calvin Luo
 >This is what you first see when you run the project. Notice that there are two sections in the menu screen: mode and level (lvl). Mode is always set to A as we have yet to create a mode B, so you can ignore that section. Levels can be increased via up key and decreased via down key. The minimum level is 1 and maximum is 19. The higher the level, the faster the pieces drop (stronger gravity). However, you also get more points for clearing lines at a higher level. Once the level has been selected, press enter to begin the game! 
 ## The Game
 ![Tetris](https://user-images.githubusercontent.com/90801636/171360119-0d60ea42-df01-4d7c-8d1d-b6934057d76e.png)
+>Notice the three rectangular sections to the left of the game board.
+> - The top of the three sections displays the held piece. You do not start with a held piece so that section is left blank in the beginning. REMEMBER that by holding a piece, you are deploying your previously held piece (if there is one).
+> - The middle of the three sections display your very next piece that will come from the top of the game board after the current piece lands and locks in.
+> - The bottom of the three sections display the score.
+
+>Notice the rectangular section to the right of the game board.
+> - displays the next five pieces (top-to-bottom order) after the very next piece, which is already displayed to the left of the game board.
+### Ghost Pieces
+![Ghost](https://user-images.githubusercontent.com/90801636/171367487-720aad22-05f1-462d-be03-d3477c48767a.png)
