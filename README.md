@@ -14,9 +14,9 @@ by: Camden Bartelt and Calvin Luo
 ## Most Basic Rules
 - Pieces come from the top of the board
 - Pieces can only rotate and move left, right, and down
-- Game is over once pieces reach the top of the board
+- Game is over once pieces reach the top of the board (from the bottom)
 - Can only remove pieces once all space in a line is filled
-- More lines cleared = faster pace
+- More lines cleared = faster pace = more points
 - Held pieces cannot be repeatedly deployed
 ### Scoring Rules
 - 1 line cleared: 100 x lvl
