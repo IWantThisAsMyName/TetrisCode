@@ -17,7 +17,7 @@ by: Camden Bartelt and Calvin Luo
 - Game is over once pieces reach the top of the board (from the bottom)
 - Can only remove pieces once all space in a line is filled
 - More lines cleared = faster pace = more points
-- Held pieces cannot be repeatedly deployed
+- Held pieces cannot be consecutively deployed
 ### Scoring Rules
 - 1 line cleared: 100 x lvl
 - 2 lines cleared: 300 x lvl
@@ -44,5 +44,5 @@ Notice the rectangular section to the right of the game board.
 ### Piece Holding
 There are some more intricate rules when it comes to the piece holding mechanism.
 - By holding a piece, you are also deploying the previously held piece (only if there is one).
-- Pieces cannot be consecutively held/deployed.
+- Pieces cannot be consecutively held/deployed. For example, you cannot hold a piece that was just deployed.
 - When holding the current piece, the previously held piece is deployed from the top of the screen.
