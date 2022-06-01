@@ -12,8 +12,9 @@ by: Camden Bartelt and Calvin Luo
 - C: hold piece/deploy held piece
 - Enter: start game
 ## Most Basic Rules
+- Pieces come from the top of the board
 - Can only move pieces left and right along with rotation and instant dropping
-- Game is over once pieces reach the top of the screen
+- Game is over once pieces reach the top of the board
 - Can only remove pieces once all space in a line is filled
 - More lines cleared = faster pace
 - Held pieces cannot be repeatedly deployed
