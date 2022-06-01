@@ -42,7 +42,6 @@ public class UIButton extends UIElement {
 			}
 		}
 	}
-
 	private boolean inside(double x, double y) {
 		Point p = new Point((int) x, (int) y);
 		int intsersectCnt = 0;
