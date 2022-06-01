@@ -13,7 +13,7 @@ by: Camden Bartelt and Calvin Luo
 - Enter: start game
 ## Most Basic Rules
 - Pieces come from the top of the board
-- Pieces rotate, drop instantly, and move left and right
+- Pieces can only rotate and move left, right, and down
 - Game is over once pieces reach the top of the board
 - Can only remove pieces once all space in a line is filled
 - More lines cleared = faster pace
