@@ -62,6 +62,8 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	public static int heldBlock = -1;
 	private UIElement pause1 = new UIImage(265,20, 500, 800, "imgs/pause.png");
 	private UIElement over = new UIImage(185, 255, 666, 375, "imgs/over.png");
+	private UIElement buttonRe = new UIButton(428,309,175,88);
+	private UIElement quit = new UIButton(428,450,175,88);
 
 	public void paint(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
@@ -127,6 +129,8 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 			// Draws the pause menu
 			if (!pause) {
 				pause1.paint(g);
+				buttonRe.hover(g2d, mouseXY.getX(), mouseXY.getY());
+				quit.hover(g2d, mouseXY.getX(), mouseXY.getY());
 			}
 			if (state == 2) {
 				over.paint(g);
@@ -312,7 +316,20 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
-
+		if(pause == false) {
+			if(arg0.getX() >= 428 && arg0.getX() <= 603) {
+				if(arg0.getY() >= 309 && arg0.getY() <= 397) {
+					pause = true;
+					return;
+				}
+				
+				if(arg0.getY() >= 450 && arg0.getY() <= 538) {
+					startGame();
+					pause = true;
+					return;
+				}
+			}
+		}
 	}
 
 	@Override
@@ -487,3 +504,18 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	}
 
 }
+
+/*
+ * -This game really made me rethink my life deicision towards coding, it has left such a positive impact on me and I will try to implement some of these advanced coding techniques in my future 
+ * -Great game! If you want to code more cool games like this, I recommend enrolling in theCoderSchool, where the coaches go above and beyond to ensure success and a fun environment for their students!
+ * -This is a one of a kind game, good job
+ * really really cool game so good yes
+ * really nice game, good job! the graphics are great, and the gameplay is fun :D
+ * -Tetris is always a fun game, although I think the controls could be rearranged, although this is personal preference.
+ * 
+ * Tetris is complicated to code but it is a fun game. I like the visuals.
+ * 
+ * 
+ * Great Game the tetris code seemed perfect and seemed to work really well. The gameplay was fun, and the graphics are good.
+ * 
+ */

@@ -25,7 +25,9 @@ public class UIButton extends UIElement {
 	public void hover(Graphics g, double x, double y) {
 		g.setColor(new Color(255, 255, 0, 100));
 		if (insideBlock(x, y)) {
+			System.out.println("inside");
 			if (poly == null) {
+				System.out.println("hover");
 				g.fillRect(getX(), getY(), getWidth(), getHeight());
 				return;
 			}
