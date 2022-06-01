@@ -16,6 +16,7 @@ by: Camden Bartelt and Calvin Luo
 - Game is over once pieces reach the top of the screen
 - Can only remove pieces once all space in a line is filled
 - More lines cleared = faster pace
+- Held pieces cannot be repeatedly deployed
 ### Scoring Rules
 - 1 line cleared: 100 x lvl
 - 2 lines cleared: 300 x lvl
