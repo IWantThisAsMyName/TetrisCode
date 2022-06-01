@@ -43,6 +43,6 @@ Notice the rectangular section to the right of the game board.
 - Take advantage of them, it's very useful.
 ### Piece Holding
 There are some more intricate rules when it comes to the piece holding mechanism.
-- By holding a piece, you are ALSO deploying the previously held piece (only if there is one).
+- By holding a piece, you are also deploying the previously held piece (only if there is one).
 - Pieces cannot be consecutively held/deployed.
 - When initially holding the current piece, the previously held piece is deployed from the top of the screen.
