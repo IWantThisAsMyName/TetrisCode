@@ -8,8 +8,8 @@ by: Camden Bartelt and Calvin Luo
 - Up arrow: rotate piece OR increase level
 - Down arrow: soft drop piece OR decrease level
 - Space bar: hard (instant) drop piece
-- Esc: pause/unpause
-- C: hold piece/unhold piece
+- Esc: pause/resume
+- C: hold piece/deploy held piece
 - Enter: start game
 ## Most Basic Rules
 - Can only move pieces left and right along with rotation and instant dropping
