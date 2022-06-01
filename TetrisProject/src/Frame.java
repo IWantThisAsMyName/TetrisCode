@@ -324,8 +324,8 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 				}
 				
 				if(arg0.getY() >= 450 && arg0.getY() <= 538) {
-					startGame();
 					pause = true;
+					state = 0;
 					return;
 				}
 			}
@@ -486,6 +486,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	}
 
 	private static void startGame() {
+		score = 0;
 		state = 1;
 		end = false;
 		board = new Board(initLevel);
