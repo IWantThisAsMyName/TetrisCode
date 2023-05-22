@@ -1,5 +1,5 @@
 # Tetris
-by: Camden Bartelt and Calvin Luo
+
 
 ![Pieces](https://i.postimg.cc/HnBNRC7K/pieces-removebg-preview.png)
 ## Controls
